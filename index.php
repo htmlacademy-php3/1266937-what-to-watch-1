@@ -17,10 +17,10 @@ $httpFactory = new HttpFactory();
 $httpClient = new Client();
 
 $filmRepository = new OmdbFilmRepository(
-  httpClient: $httpClient,
-  requestFactory: $httpFactory,
-  uriFactory: $httpFactory,
-  apiKey: $apiKey
+    httpClient: $httpClient,
+    requestFactory: $httpFactory,
+    uriFactory: $httpFactory,
+    apiKey: $apiKey
 );
 
 $service = new FilmService($filmRepository);
