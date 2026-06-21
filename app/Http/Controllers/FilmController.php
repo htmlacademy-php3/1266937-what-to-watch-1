@@ -39,9 +39,25 @@ class FilmController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Display a listing of similar films
      */
-    public function destroy(string $id)
+    public function similar()
+    {
+        //
+    }
+
+    /**
+     * Display the promo film
+     */
+    public function showPromo()
+    {
+        //
+    }
+
+    /**
+     * Set the specified film as promo
+     */
+    public function setPromo(string $id)
     {
         //
     }
