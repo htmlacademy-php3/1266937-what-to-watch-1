@@ -26,7 +26,7 @@ Route::controller(FilmController::class)->group(function () {
     Route::get('/films/{id}', 'show');
     Route::patch('/films/{id}', 'update');
     Route::get('/films/{id}/similar', 'similar');
-    Route::get('/promo', 'getPromo');
+    Route::get('/promo', 'showPromo');
     Route::post('/promo/{id}', 'setPromo');
 });
 
