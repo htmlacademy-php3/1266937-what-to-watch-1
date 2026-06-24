@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Responses\SuccessResponse;
 use Illuminate\Http\Request;
 
 class GenreController extends Controller
@@ -11,7 +12,7 @@ class GenreController extends Controller
      */
     public function index()
     {
-        //
+        return new SuccessResponse();
     }
 
     /**
@@ -19,6 +20,6 @@ class GenreController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        return new SuccessResponse();
     }
 }

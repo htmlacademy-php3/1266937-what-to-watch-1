@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Responses\SuccessResponse;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -11,7 +12,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        return new SuccessResponse();
     }
 
     /**
@@ -19,7 +20,7 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return new SuccessResponse();
     }
 
     /**
@@ -27,7 +28,7 @@ class CommentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        return new SuccessResponse();
     }
 
     /**
@@ -35,6 +36,6 @@ class CommentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return new SuccessResponse();
     }
 }
