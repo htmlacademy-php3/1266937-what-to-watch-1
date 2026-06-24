@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Responses\SuccessResponse;
 use Illuminate\Http\Request;
 
 class FavoriteController extends Controller
@@ -11,7 +12,7 @@ class FavoriteController extends Controller
      */
     public function index()
     {
-        //
+        return new SuccessResponse();
     }
 
     /**
@@ -19,7 +20,7 @@ class FavoriteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return new SuccessResponse();
     }
 
     /**
@@ -27,6 +28,6 @@ class FavoriteController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return new SuccessResponse();
     }
 }
