@@ -2,23 +2,29 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
+ * Class Director
+ *
  * @property int $id
  * @property string $name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Director newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Director newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Director query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Director whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Director whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Director whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Director whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ *
+ * @property Collection|Film[] $films
+ *
+ * @package App\Models
  */
 class Director extends Model
 {
-    //
+    protected $fillable = ['name'];
+
+    public function films(): BelongsToMany
+    {
+        return $this->belongsToMany(Film::class)->withTimestamps();
+    }
 }
