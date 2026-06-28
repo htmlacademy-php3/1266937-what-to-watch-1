@@ -31,7 +31,6 @@ class FilmFactory extends Factory
             'released' => fake()->year(),
             'imdb_id' => fake()->unique()->regexify('tt[0-9]{7}'),
             'status' => fake()->randomElement(FilmStatus::cases())->value,
-            'is_promo' => false,
         ];
     }
 }
