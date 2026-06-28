@@ -11,14 +11,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * Class Genre
  *
+ * @package App\Models
  * @property int $id
  * @property string $name
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- *
- * @property Collection|Film[] $films
- *
- * @package App\Models
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Collection<int, \App\Models\Film> $films
+ * @property-read int|null $films_count
+ * @method static \Database\Factories\GenreFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Genre newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Genre newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Genre query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Genre whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Genre whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Genre whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Genre whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Genre extends Model
 {

@@ -11,14 +11,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * Class Actor
  *
+ * @package App\Models
  * @property int $id
  * @property string $name
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- *
- * @property Collection|Film[] $films
- *
- * @package App\Models
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Collection<int, \App\Models\Film> $films
+ * @property-read int|null $films_count
+ * @method static \Database\Factories\ActorFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Actor newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Actor newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Actor query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Actor whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Actor whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Actor whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Actor whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Actor extends Model
 {

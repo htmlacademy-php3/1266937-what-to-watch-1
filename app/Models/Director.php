@@ -11,14 +11,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * Class Director
  *
+ * @package App\Models
  * @property int $id
  * @property string $name
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- *
- * @property Collection|Film[] $films
- *
- * @package App\Models
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Collection<int, \App\Models\Film> $films
+ * @property-read int|null $films_count
+ * @method static \Database\Factories\DirectorFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Director newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Director newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Director query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Director whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Director whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Director whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Director whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Director extends Model
 {

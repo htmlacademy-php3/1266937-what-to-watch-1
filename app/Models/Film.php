@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * Class Film
  *
+ * @package App\Models
  * @property int $id
  * @property string $name
  * @property string|null $poster_image
@@ -25,16 +26,40 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $released
  * @property string $imdb_id
  * @property string $status
- * @property bool $is_promo
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- *
- * @property Collection|Actor[] $actors
- * @property Collection|Comment[] $comments
- * @property Collection|Director[] $directors
- * @property Collection|Genre[] $genres
- *
- * @package App\Models
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $is-promo
+ * @property-read Collection<int, \App\Models\Actor> $actors
+ * @property-read int|null $actors_count
+ * @property-read Collection<int, \App\Models\Comment> $comments
+ * @property-read int|null $comments_count
+ * @property-read Collection<int, \App\Models\Director> $directors
+ * @property-read int|null $directors_count
+ * @property-read Collection<int, \App\Models\User> $favoritedByUsers
+ * @property-read int|null $favorited_by_users_count
+ * @property-read Collection<int, \App\Models\Genre> $genres
+ * @property-read int|null $genres_count
+ * @method static \Database\Factories\FilmFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereBackgroundColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereBackgroundImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereImdbId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereIsPromo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film wherePosterImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film wherePreviewImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film wherePreviewVideoLink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereReleased($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereRunTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereVideoLink($value)
+ * @mixin \Eloquent
  */
 class Film extends Model
 {
