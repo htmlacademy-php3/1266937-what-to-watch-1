@@ -10,10 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('promo_film', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('film_id')->constrained();
-            $table->timestamps();
+        Schema::table('films', function (Blueprint $table) {
+            $table->boolean('is-promo')->default(false);
         });
     }
 
@@ -22,6 +20,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('promo_film');
+        Schema::table('films', function (Blueprint $table) {
+            $table->dropColumn('is-promo');
+        });
     }
 };
