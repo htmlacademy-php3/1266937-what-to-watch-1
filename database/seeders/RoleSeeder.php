@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Role;
+use App\Enums\RoleName;
 
 class RoleSeeder extends Seeder
 {
@@ -13,7 +13,8 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::create(['name' => 'user']);
-        Role::create(['name' => 'moderator']);
+        foreach (RoleName::cases() as $role) {
+            Role::firstOrCreate(['name' => $role->value]);
+        }
     }
 }
