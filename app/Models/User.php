@@ -5,10 +5,12 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * Class User
@@ -45,13 +47,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class User extends Model
-{
-    use HasFactory;
 
-    protected $casts = [
-        'role_id' => 'int',
-        'email_verified_at' => 'datetime'
+class User extends Authenticatable
+{
+    /** @use HasFactory<UserFactory> */
+    use HasApiTokens, HasFactory, Notifiable;
+
+    protected $fillable = [
+        'name',
+        'role_id',
+        'email',
+        'password',
+        'file'
     ];
 
     protected $hidden = [
@@ -59,15 +66,23 @@ class User extends Model
         'remember_token'
     ];
 
-    protected $fillable = [
-        'name',
-        'role_id',
-        'email',
-        'email_verified_at',
-        'password',
-        'file',
-        'remember_token'
+    protected $casts = [
+        'role_id' => 'int',
+        'email_verified_at' => 'datetime'
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'role_id' => 'int',
+            'email_verified_at' => 'datetime'
+        ];
+    }
 
     public function role(): BelongsTo
     {
