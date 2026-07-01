@@ -40,14 +40,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/user', 'update');
     });
 
-    Route::controller(FilmController::class)->group(function () {
-        Route::post('/films', 'store');
-        Route::patch('/films/{id}', 'update');
-        Route::post('/promo/{id}', 'setPromo');
-    });
-
-    Route::controller(GenreController::class)->group(function () {
-        Route::patch('/genres/{genre}', 'update');
+    Route::middleware('role:moderator')->group(function () {
+        Route::controller(GenreController::class)->group(function () {
+            Route::patch('/genres/{genre}', 'update');
+        });
+        Route::controller(FilmController::class)->group(function () {
+            Route::post('/promo/{id}', 'setPromo');
+        });
+        Route::controller(FilmController::class)->group(function () {
+            Route::post('/films', 'store');
+            Route::patch('/films/{id}', 'update');
+        });
     });
 
     Route::controller(FavoriteController::class)->group(function () {

@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class EnsureUserHasRole
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  Closure(Request): (Response)  $next
+     */
+    public function handle(Request $request, Closure $next, string ...$roles): Response
+    {
+        if (!$request->user() || !\in_array($request->user()->role->name, $roles)) {
+            throw new AuthorizationException();
+        }
+
+        return $next($request);
+    }
+}
