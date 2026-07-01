@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
+use App\Enums\RoleName;
 
 /**
  * Class User
@@ -84,11 +85,6 @@ class User extends Authenticatable
         ];
     }
 
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Role::class);
-    }
-
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
@@ -98,4 +94,15 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Film::class, 'favorite_film');
     }
+
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function isModerator(): bool
+    {
+        return $this->role && $this->role->name === RoleName::MODERATOR->value;
+    }
+
 }
