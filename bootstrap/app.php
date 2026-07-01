@@ -8,7 +8,6 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Http\Middleware\EnsureUserHasRole;
@@ -52,14 +51,6 @@ return Application::configure(basePath: dirname(__DIR__))
             new FailResponse(
                 message: 'Запрашиваемая страница не существует.',
                 statusCode: 404
-            )
-        );
-
-        $exceptions->render(
-            fn(AccessDeniedException $e) =>
-            new FailResponse(
-                message: 'Доступ запрещен.',
-                statusCode: 403
             )
         );
 
