@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * Class Comment
@@ -16,16 +17,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property string $text
  * @property int $rating
- * @property int $user_id
+ * @property int|null $user_id
  * @property int $film_id
  * @property int|null $comment_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $author_name
  * @property-read \App\Models\Film $film
  * @property-read Comment|null $parentComment
  * @property-read Collection<int, Comment> $replies
  * @property-read int|null $replies_count
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\User|null $user
  * @method static \Database\Factories\CommentFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment newQuery()
@@ -77,5 +79,15 @@ class Comment extends Model
     public function replies(): HasMany
     {
         return $this->hasMany(Comment::class, 'comment_id');
+    }
+
+    /**
+     * Get the comment author's name.
+     */
+    protected function authorName(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->user ? $this->user->name : 'Гость',
+        );
     }
 }

@@ -10,8 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('films', function (Blueprint $table) {
-            $table->boolean('is_promo')->default(false);
+        Schema::table('comments', function (Blueprint $table) {
+            $table->foreignId('user_id')->nullable()->change();
         });
     }
 
@@ -20,8 +20,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('films', function (Blueprint $table) {
-            $table->dropColumn('is_promo');
+        Schema::table('comments', function (Blueprint $table) {
+            $table->foreignId('user_id')->nullable(false)->change();
         });
     }
 };

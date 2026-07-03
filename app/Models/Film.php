@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class Film
@@ -28,7 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $is-promo
+ * @property int $is_promo
  * @property-read Collection<int, \App\Models\Actor> $actors
  * @property-read int|null $actors_count
  * @property-read Collection<int, \App\Models\Comment> $comments
@@ -40,25 +42,26 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Collection<int, \App\Models\Genre> $genres
  * @property-read int|null $genres_count
  * @method static \Database\Factories\FilmFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereBackgroundColor($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereBackgroundImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereImdbId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereIsPromo($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film wherePosterImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film wherePreviewImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film wherePreviewVideoLink($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereReleased($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereRunTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Film whereVideoLink($value)
+ * @method static Builder<static>|Film newModelQuery()
+ * @method static Builder<static>|Film newQuery()
+ * @method static Builder<static>|Film query()
+ * @method static Builder<static>|Film whereBackgroundColor($value)
+ * @method static Builder<static>|Film whereBackgroundImage($value)
+ * @method static Builder<static>|Film whereCreatedAt($value)
+ * @method static Builder<static>|Film whereDescription($value)
+ * @method static Builder<static>|Film whereId($value)
+ * @method static Builder<static>|Film whereImdbId($value)
+ * @method static Builder<static>|Film whereIsPromo($value)
+ * @method static Builder<static>|Film whereName($value)
+ * @method static Builder<static>|Film wherePosterImage($value)
+ * @method static Builder<static>|Film wherePreviewImage($value)
+ * @method static Builder<static>|Film wherePreviewVideoLink($value)
+ * @method static Builder<static>|Film whereReleased($value)
+ * @method static Builder<static>|Film whereRunTime($value)
+ * @method static Builder<static>|Film whereStatus($value)
+ * @method static Builder<static>|Film whereUpdatedAt($value)
+ * @method static Builder<static>|Film whereVideoLink($value)
+ * @method static Builder<static>|Film withRating()
  * @mixin \Eloquent
  */
 class Film extends Model
@@ -109,5 +112,14 @@ class Film extends Model
     public function genres(): BelongsToMany
     {
         return $this->belongsToMany(Genre::class)->withTimestamps();
+    }
+
+    /**
+     * Scope a query to include the average rating of the film.
+     */
+    #[Scope]
+    protected function withRating(Builder $query): void
+    {
+        $query->withAvg('comments as rating', 'rating')->withCasts(['rating' => 'decimal:1']);
     }
 }
