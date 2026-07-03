@@ -11,7 +11,7 @@ class RegisterAction
 {
     public function execute(array $data): User
     {
-        $role = Role::where('name', RoleName::USER->value)->firstOrFail();
+        $role = Role::where('name', RoleName::User->value)->firstOrFail();
 
         return User::create([
             'name' => $data['name'],

@@ -31,7 +31,11 @@ use App\Enums\RoleName;
  * @property-read int|null $comments_count
  * @property-read Collection<int, \App\Models\Film> $favoriteFilms
  * @property-read int|null $favorite_films_count
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read int|null $notifications_count
  * @property-read \App\Models\Role $role
+ * @property-read Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
@@ -102,7 +106,6 @@ class User extends Authenticatable
 
     public function isModerator(): bool
     {
-        return $this->role && $this->role->name === RoleName::MODERATOR->value;
+        return $this->role && $this->role->name === RoleName::Moderator->value;
     }
-
 }
