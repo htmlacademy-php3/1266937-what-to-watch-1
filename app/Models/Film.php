@@ -41,6 +41,9 @@ use Illuminate\Database\Eloquent\Builder;
  * @property-read int|null $favorited_by_users_count
  * @property-read Collection<int, \App\Models\Genre> $genres
  * @property-read int|null $genres_count
+ * @property-read string|null $rating
+ * @property-read int|null $scores_count
+ * @property-read bool $is_favorite
  * @method static \Database\Factories\FilmFactory factory($count = null, $state = [])
  * @method static Builder<static>|Film newModelQuery()
  * @method static Builder<static>|Film newQuery()
@@ -118,8 +121,34 @@ class Film extends Model
      * Scope a query to include the average rating of the film.
      */
     #[Scope]
-    protected function withRating(Builder $query): void
+    protected function withRating(Builder $query)
     {
-        $query->withAvg('comments as rating', 'rating')->withCasts(['rating' => 'decimal:1']);
+        return $query->withAvg('comments as rating', 'rating')->withCasts(['rating' => 'decimal:1']);
+    }
+
+    /**
+     * Scope a query to include the total scores count of the film.
+     */
+    #[Scope]
+    protected function withScoresCount(Builder $query): void
+    {
+        $query->withCount('comments as scores_count');
+    }
+
+    /**
+     * Scope a query to check if the film is favorited by a user.
+     */
+    #[Scope]
+    protected function withIsFavorite(Builder $query, ?int $userId): void
+    {
+        if (!$userId) {
+            $query->selectRaw('false as is_favorite');
+
+            return;
+        }
+
+        $query->withExists([
+            'favoritedByUsers as is_favorite' => fn($q) => $q->where('user_id', $userId),
+        ]);
     }
 }

@@ -10,6 +10,7 @@ use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
+use Response;
 
 class AuthController extends Controller
 {
@@ -28,7 +29,7 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): SuccessResponse
     {
         if (!Auth::attempt($request->validated())) {
             throw ValidationException::withMessages(['email' => [trans('auth.failed')]]);
@@ -43,6 +44,11 @@ class AuthController extends Controller
         ], 200);
     }
 
+    /**
+     * Summary of logout
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

@@ -2,24 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateGenreRequest;
 use App\Http\Responses\SuccessResponse;
-use Illuminate\Http\Request;
+use App\Models\Genre;
 
 class GenreController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the genres.
+     *
+     * @return SuccessResponse
      */
-    public function index()
+    public function index(): SuccessResponse
     {
-        return new SuccessResponse();
+        $genres = Genre::all();
+
+        return new SuccessResponse($genres);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified genre in storage.
      */
-    public function update(Request $request, string $id)
+
+    /**
+     * Update the specified genre in storage.
+     *
+     * @param UpdateGenreRequest $request
+     * @param Genre $genre
+     *
+     * @return SuccessResponse
+     */
+    public function update(UpdateGenreRequest $request, Genre $genre): SuccessResponse
     {
-        return new SuccessResponse();
+        $genre->update($request->validated());
+
+        return new SuccessResponse($genre);
     }
 }
