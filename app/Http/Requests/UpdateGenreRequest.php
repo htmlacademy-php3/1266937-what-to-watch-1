@@ -4,15 +4,16 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateCommentRequest extends FormRequest
+class UpdateGenreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->isModerator() ?? false;
     }
 
     /**
@@ -20,21 +21,16 @@ class UpdateCommentRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-
     public function rules(): array
     {
+        $genre = $this->route('genre');
+
         return [
-            'text' => [
+            'name' => [
                 'required',
                 'string',
-                'min:50',
-                'max:400',
-            ],
-            'rating' => [
-                'nullable',
-                'integer',
-                'min:1',
-                'max:10',
+                'max:255',
+                Rule::unique('genres')->ignore($genre->id),
             ],
         ];
     }

@@ -2,17 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Responses\SuccessResponse;
 use Illuminate\Http\Request;
+use App\Queries\FetchFilmsQuery;
+use App\Http\Requests\FilterFilmRequest;
+use App\Http\Responses\PaginatedSuccessResponse;
+use App\Http\Responses\SuccessResponse;
+use App\Models\Film;
+use App\Http\Resources\FilmResource;
+use App\Queries\FetchFilmQuery;
 
 class FilmController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(FilterFilmRequest $request, FetchFilmsQuery $query): PaginatedSuccessResponse
     {
-        return new SuccessResponse();
+        $data = $request->validated();
+
+        $this->authorize('viewAny', [Film::class, $data['status']]);
+
+        $filters = [
+            ...$data,
+            'user_id' => $request->user()?->id,
+        ];
+
+        $paginator = $query->execute($filters, perPage: 8);
+
+        return (new PaginatedSuccessResponse(
+            FilmResource::collection($paginator->items())->resolve(),
+            $paginator
+        ));
     }
 
     /**
@@ -26,9 +46,13 @@ class FilmController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id, FetchFilmQuery $query): SuccessResponse
     {
-        return new SuccessResponse();
+        $userId = auth('sanctum')->id();
+
+        $film = $query->execute($id, $userId);
+
+        return new SuccessResponse(new FilmResource($film));
     }
 
     /**

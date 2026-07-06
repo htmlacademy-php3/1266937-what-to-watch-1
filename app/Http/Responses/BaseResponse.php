@@ -4,6 +4,7 @@ namespace App\Http\Responses;
 
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class BaseResponse implements Responsable
@@ -31,11 +32,15 @@ abstract class BaseResponse implements Responsable
      */
     protected function prepareData(): array
     {
+        if ($this->data instanceof JsonResource) {
+            return $this->data->resolve();
+        }
+
         if ($this->data instanceof Arrayable) {
             return $this->data->toArray();
         }
 
-        return $this->data;
+        return (array) $this->data;
 
     }
 
