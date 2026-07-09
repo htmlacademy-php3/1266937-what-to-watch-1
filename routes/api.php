@@ -7,6 +7,7 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FilmController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\UserController;
+use App\Jobs\ProcessFilm;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register');
