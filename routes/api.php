@@ -41,7 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/user', 'update');
     });
 
-    Route::middleware('role:user')->group(function () {
+    Route::middleware('role:moderator')->group(function () {
         Route::controller(GenreController::class)->group(function () {
             Route::patch('/genres/{genre}', 'update');
         });
