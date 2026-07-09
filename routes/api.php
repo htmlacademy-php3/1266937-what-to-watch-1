@@ -7,6 +7,7 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FilmController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\UserController;
+use App\Jobs\ProcessFilm;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register');
@@ -40,7 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/user', 'update');
     });
 
-    Route::middleware('role:moderator')->group(function () {
+    Route::middleware('role:user')->group(function () {
         Route::controller(GenreController::class)->group(function () {
             Route::patch('/genres/{genre}', 'update');
         });

@@ -7,9 +7,11 @@ use App\Queries\FetchFilmsQuery;
 use App\Http\Requests\FilterFilmRequest;
 use App\Http\Responses\PaginatedSuccessResponse;
 use App\Http\Responses\SuccessResponse;
+use App\Http\Requests\StoreFilmRequest;
 use App\Models\Film;
 use App\Http\Resources\FilmResource;
 use App\Queries\FetchFilmQuery;
+use App\Jobs\ProcessFilm;
 
 class FilmController extends Controller
 {
@@ -38,9 +40,19 @@ class FilmController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreFilmRequest $request)
     {
-        return new SuccessResponse();
+        $data = $request->validated();
+
+        $film = Film::create([
+            'imdb_id' => $data['imdb_id'],
+            'name' => 'Загрузка...',
+            'status' => 'pending',
+        ]);
+
+        ProcessFilm::dispatch($data['imdb_id']);
+
+        return new SuccessResponse($film, 201);
     }
 
     /**

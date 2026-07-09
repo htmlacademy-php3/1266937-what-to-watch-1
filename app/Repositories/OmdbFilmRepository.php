@@ -3,35 +3,29 @@
 namespace App\Repositories;
 
 use App\Repositories\Interfaces\FilmRepositoryInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\UriFactoryInterface;
+use Illuminate\Support\Facades\Http;
 
 class OmdbFilmRepository implements FilmRepositoryInterface
 {
     private const string BASE_URL = 'http://omdbapi.com';
 
     public function __construct(
-        private ClientInterface $httpClient,
-        private RequestFactoryInterface $requestFactory,
-        private UriFactoryInterface $uriFactory,
-        private string $apiKey
+
+        private string $apiKey,
     ) {
     }
 
-    public function getFilmByImdbId(string $imdbId): ?array
+    public function getFilmById(string $id): ?array
     {
-        $params = [
+        $response = Http::get(self::BASE_URL, [
             'apikey' => $this->apiKey,
-            'i' => $imdbId,
-        ];
+            'i' => $id,
+        ]);
 
-        $apiUri = $this->uriFactory->createUri(self::BASE_URL)->withQuery(http_build_query($params));
+        if ($response->failed() || ($response['Response'] ?? '') === 'False') {
+            return null;
+        }
 
-        $request = $this->requestFactory->createRequest('GET', $apiUri);
-
-        $response = $this->httpClient->sendRequest($request);
-
-        return json_decode($response->getBody()->getContents(), true);
+        return $response->json();
     }
 }

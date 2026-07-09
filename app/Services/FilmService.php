@@ -11,8 +11,8 @@ class FilmService
     ) {
     }
 
-    public function getFilm(string $imdbId): ?array
+    public function getFilm(string $id): ?array
     {
-        return $this->filmRepository->getFilmByImdbId($imdbId);
+        return $this->filmRepository->getFilmById($id);
     }
 }
