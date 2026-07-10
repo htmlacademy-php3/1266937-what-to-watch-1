@@ -9,7 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\Middleware\RateLimited;
 use Exception;
-use App\Services\FilmService;
+use App\Repositories\Interfaces\FilmRepositoryInterface;
 use App\Services\OmdbConverterService;
 use App\Models\Film;
 use App\Models\Genre;
@@ -31,9 +31,9 @@ class ProcessFilm implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(FilmService $filmService, OmdbConverterService $converter): void
+    public function handle(FilmRepositoryInterface $filmRepository, OmdbConverterService $converter): void
     {
-        $externalData = $filmService->getFilm($this->imdbId);
+        $externalData = $filmRepository->getFilmById($this->imdbId);
 
         $filmData = $converter->convert($externalData);
 
