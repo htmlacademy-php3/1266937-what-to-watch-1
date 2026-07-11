@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Queries\FetchFilmsQuery;
+use App\Queries\GetFilmsQuery;
 use App\Http\Requests\FilterFilmRequest;
 use App\Http\Responses\PaginatedSuccessResponse;
 use App\Http\Responses\SuccessResponse;
 use App\Http\Requests\StoreFilmRequest;
 use App\Models\Film;
 use App\Http\Resources\FilmResource;
-use App\Queries\FetchFilmQuery;
+use App\Queries\GetFilmQuery;
 use App\Jobs\ProcessFilm;
 
 class FilmController extends Controller
@@ -18,7 +18,7 @@ class FilmController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(FilterFilmRequest $request, FetchFilmsQuery $query): PaginatedSuccessResponse
+    public function index(FilterFilmRequest $request, GetFilmsQuery $query): PaginatedSuccessResponse
     {
         $data = $request->validated();
 
@@ -58,7 +58,7 @@ class FilmController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id, FetchFilmQuery $query): SuccessResponse
+    public function show(string $id, GetFilmQuery $query): SuccessResponse
     {
         $userId = auth('sanctum')->id();
 

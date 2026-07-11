@@ -11,13 +11,14 @@ abstract class BaseResponse implements Responsable
 {
     public function __construct(
         protected mixed $data = [],
-        public int $statusCode = RESPONSE::HTTP_OK
+        public int $statusCode = Response::HTTP_OK
 
     ) {
     }
 
     /**
-     * Create an HTTP response that represents the object
+     * Create an HTTP response that represents the object.
+     *
      * @param mixed $request
      * @return JsonResponse
      */

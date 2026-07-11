@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\SuccessResponse;
-use Illuminate\Http\Request;
 use App\Models\Comment;
+use App\Models\Film;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Http\Resources\CommentResource;
+use App\Queries\GetCommentsQuery;
+use App\Http\Requests\StoreCommentRequest;
+use App\Actions\CreateCommentAction;
 
 
 class CommentController extends Controller
@@ -15,17 +19,32 @@ class CommentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Film $film, GetCommentsQuery $query): SuccessResponse
     {
-        return new SuccessResponse();
+        $comments = $query->execute($film);
+
+        $data = CommentResource::collection(
+            $comments
+        );
+
+        return $this->successResponse($data);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCommentRequest $request, Film $film, CreateCommentAction $action)
     {
-        return new SuccessResponse();
+        Gate::authorize('create', Comment::class);
+
+        $userId = auth()->id();
+        $validated = $request->validated();
+
+        $comment = $action->execute($film, $validated, $userId);
+
+        $data = CommentResource::make($comment);
+
+        return $this->successResponse($data);
     }
 
     /**
@@ -33,11 +52,13 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         $comment->update($request->validated());
 
-        return new SuccessResponse([new CommentResource($comment), 201]);
+        $data = CommentResource::make($comment);
+
+        return $this->successResponse($data);
     }
 
     /**
@@ -45,10 +66,12 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
+
+        $comment->replies()->delete();
 
         $comment->delete();
 
-        return new SuccessResponse([]);
+        return $this->successResponse([]);
     }
 }

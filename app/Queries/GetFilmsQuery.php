@@ -8,15 +8,20 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Models\Film;
 use App\Enums\FilmStatus;
 
-class FetchFilmsQuery
+class GetFilmsQuery
 {
     /**
-     * Fetch filtered and paginated films.
+     * Execute the query to get filtered films with pagination.
      *
-     * @param array $filters Filters and sorting oprions.
+     * @param array{
+     *  user_id?: int|null,
+     *  status?: string,
+     *  genre?: string,
+     *  order_by?: string,
+     *  order_to?: string
+     * } $filters Filters and sorting options.
      * @param int $perPage Items per page.
      * @param Builder|Relation|null $baseQuery Optional pre-configured query or relation.
-     *
      * @return LengthAwarePaginator<Film> Paginated collection of film models.
      */
     public function execute(array $filters, int $perPage = 8, Builder|Relation|null $baseQuery = null): LengthAwarePaginator

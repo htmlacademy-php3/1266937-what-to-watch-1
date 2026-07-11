@@ -10,7 +10,6 @@ use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
-use Response;
 
 class AuthController extends Controller
 {
@@ -46,6 +45,7 @@ class AuthController extends Controller
 
     /**
      * Summary of logout
+     *
      * @param Request $request
      * @return \Illuminate\Http\Response
      */

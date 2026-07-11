@@ -4,15 +4,13 @@ namespace App\Queries;
 
 use App\Models\Film;
 
-class FetchFilmQuery
+class GetFilmQuery
 {
     /**
-     * Fetch film by ID with all scopes and relations.
-     */
-    /**
-     * Summary of execute
+     * Get film by ID with all scopes and relations.
+     *
      * @param int $id
-     * @param int|null $userId
+     * @param int|null $userId     *
      * @return Film|null
      */
     public function execute(int $id, ?int $userId = null): ?Film

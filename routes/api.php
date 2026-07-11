@@ -26,7 +26,7 @@ Route::controller(GenreController::class)->group(function () {
 });
 
 Route::controller(CommentController::class)->group(function () {
-    Route::get('/comments/{id}', 'index');
+    Route::get('/comments/{film}', 'index');
 });
 
 
@@ -61,7 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::controller(CommentController::class)->group(function () {
-        Route::post('/comments/{id}', 'store');
+        Route::post('/comments/{film}', 'store');
         Route::patch('/comments/{comment}', 'update');
         Route::delete('/comments/{comment}', 'destroy');
     });
