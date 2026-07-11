@@ -5,13 +5,14 @@ namespace App\Http\Responses;
 class SuccessResponse extends BaseResponse
 {
     /**
-     *
-     * @return array
+     * @inheritDoc
+
+     * @return array<string, mixed>|null
      */
-    protected function makeResponseData(): array
+    protected function makeResponseData(): ?array
     {
         return [
-            'data' => $this->prepareData()
+            'data' => $this->prepareData(),
         ];
     }
 }

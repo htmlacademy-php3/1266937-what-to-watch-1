@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use App\Http\Middleware\EnsureUserHasRole;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -39,7 +40,7 @@ return Application::configure(basePath: dirname(__DIR__))
         );
 
         $exceptions->render(
-            fn(AuthorizationException $e) =>
+            fn(AccessDeniedHttpException $e) =>
             new FailResponse(
                 message: 'Доступ запрещен.',
                 statusCode: 403
@@ -79,5 +80,5 @@ return Application::configure(basePath: dirname(__DIR__))
         //         statusCode: 500
         //     )
         // );
-    
+
     })->create();

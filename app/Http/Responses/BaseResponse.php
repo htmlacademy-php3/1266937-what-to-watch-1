@@ -5,6 +5,8 @@ namespace App\Http\Responses;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class BaseResponse implements Responsable
@@ -12,7 +14,6 @@ abstract class BaseResponse implements Responsable
     public function __construct(
         protected mixed $data = [],
         public int $statusCode = Response::HTTP_OK
-
     ) {
     }
 
@@ -33,6 +34,26 @@ abstract class BaseResponse implements Responsable
      */
     protected function prepareData(): array
     {
+        $paginator = ($this->data instanceof ResourceCollection)
+            ? $this->data->resource
+            : $this->data;
+
+        if ($paginator instanceof LengthAwarePaginator) {
+            $items = ($this->data instanceof JsonResource)
+                ? $this->data->resolve()
+                : $paginator->items();
+
+            return [
+                'data' => $items,
+                'current_page' => $paginator->currentPage(),
+                'first_page_url' => $paginator->url(1),
+                'next_page_url' => $paginator->nextPageUrl(),
+                'prev_page_url' => $paginator->previousPageUrl(),
+                'per_page' => $paginator->perPage(),
+                'total' => $paginator->total(),
+            ];
+        }
+
         if ($this->data instanceof JsonResource) {
             return $this->data->resolve();
         }
@@ -46,8 +67,9 @@ abstract class BaseResponse implements Responsable
     }
 
     /**
+     * Format structured response data for API.
      *
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     abstract protected function makeResponseData(): ?array;
 }

@@ -7,7 +7,6 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FilmController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\UserController;
-use App\Jobs\ProcessFilm;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register');
@@ -17,7 +16,7 @@ Route::controller(AuthController::class)->group(function () {
 Route::controller(FilmController::class)->group(function () {
     Route::get('/films', 'index');
     Route::get('/films/{id}', 'show');
-    Route::get('/films/{id}/similar', 'similar');
+    Route::get('/films/{film}/similar', 'similar');
     Route::get('/promo', 'showPromo');
 });
 
@@ -28,7 +27,6 @@ Route::controller(GenreController::class)->group(function () {
 Route::controller(CommentController::class)->group(function () {
     Route::get('/comments/{film}', 'index');
 });
-
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -41,16 +39,19 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/user', 'update');
     });
 
+
+    // ИСПРАВИТЬ роль !!!
+
     Route::middleware('role:moderator')->group(function () {
         Route::controller(GenreController::class)->group(function () {
             Route::patch('/genres/{genre}', 'update');
         });
         Route::controller(FilmController::class)->group(function () {
-            Route::post('/promo/{id}', 'setPromo');
+            Route::post('/promo/{film}', 'setPromo');
         });
         Route::controller(FilmController::class)->group(function () {
             Route::post('/films', 'store');
-            Route::patch('/films/{id}', 'update');
+            Route::patch('/films/{film}', 'update');
         });
     });
 
