@@ -13,13 +13,7 @@ class GetFilmsQuery
     /**
      * Execute the query to get filtered films with pagination.
      *
-     * @param array{
-     *  user_id?: int|null,
-     *  status?: string,
-     *  genre?: string,
-     *  order_by?: string,
-     *  order_to?: string
-     * } $filters Filters and sorting options.
+     * @param array $filters Filters options.
      * @param int $perPage Items per page.
      * @param Builder|Relation|null $baseQuery Optional pre-configured query or relation.
      * @return LengthAwarePaginator<Film> Paginated collection of film models.
@@ -33,17 +27,12 @@ class GetFilmsQuery
 
         $status = $filters['status'] ?? FilmStatus::Ready->value;
 
-        $query->where('status', $status);
+        $query->where('films.status', $status);
 
         if (!empty($filters['genre'])) {
             $query->whereRelation('genres', 'name', $filters['genre']);
         }
 
-        return $query
-            ->orderBy(
-                $filters['order_by'] ?? 'released',
-                $filters['order_to'] ?? 'desc'
-            )
-            ->paginate($perPage);
+        return $query->paginate($perPage);
     }
 }

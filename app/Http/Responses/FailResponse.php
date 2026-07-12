@@ -6,8 +6,8 @@ class FailResponse extends BaseResponse
 {
     public function __construct(
         mixed $data = [],
-        int $statusCode = Response::HTTP_BAD_REQUEST,
         protected ?string $message = null,
+        int $statusCode = Response::HTTP_BAD_REQUEST,
     ) {
         parent::__construct($data, $statusCode);
     }

@@ -17,25 +17,20 @@ class GenreController extends Controller
     {
         $genres = Genre::all();
 
-        return new SuccessResponse($genres);
+        return $this->successResponse($genres);
     }
-
-    /**
-     * Update the specified genre in storage.
-     */
 
     /**
      * Update the specified genre in storage.
      *
      * @param UpdateGenreRequest $request
      * @param Genre $genre
-     *
      * @return SuccessResponse
      */
     public function update(UpdateGenreRequest $request, Genre $genre): SuccessResponse
     {
         $genre->update($request->validated());
 
-        return new SuccessResponse($genre);
+        return $this->successResponse($genre);
     }
 }

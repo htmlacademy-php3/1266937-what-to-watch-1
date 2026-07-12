@@ -2,32 +2,71 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Responses\SuccessResponse;
-use Illuminate\Http\Request;
+use App\Queries\GetFilmsQuery;
+use App\Http\Resources\FilmPreviewResource;
+use App\Models\Film;
 
 class FavoriteController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the favorite films.
      */
-    public function index()
+    public function index(GetFilmsQuery $query)
     {
-        return new SuccessResponse();
+        $baseQuery = auth()->user()
+            ->favoriteFilms()
+            ->latest('favorite_film.id');
+
+        $filters = [
+            'user_id' => auth()->id(),
+        ];
+
+        $films = $query->execute($filters, perPage: 8, baseQuery: $baseQuery);
+
+        return $this->successResponse(FilmPreviewResource::collection($films));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created favorite film in storage.
      */
-    public function store(Request $request)
+    public function store(Film $film)
     {
-        return new SuccessResponse();
+        $this->authorize('view', $film);
+
+        $user = auth()->user();
+
+        if ($user->favoriteFilms()->where('film_id', $film->id)->exists()) {
+
+            return $this->failResponse(
+                statusCode: 422,
+                message: 'Этот фильм уже добавлен в Избранное'
+            );
+        }
+
+        $user->favoriteFilms()->attach($film);
+
+        return $this->successResponse([], 201);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the favorite film from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Film $film)
     {
-        return new SuccessResponse();
+        $this->authorize('view', $film);
+
+        $user = auth()->user();
+
+        if (!$user->favoriteFilms()->where('film_id', $film->id)->exists()) {
+
+            return $this->failResponse(
+                statusCode: 422,
+                message: 'Этот фильм отсутствует в списке Избранного'
+            );
+        }
+
+        $user->favoriteFilms()->detach($film->id);
+
+        return $this->successResponse([]);
     }
 }

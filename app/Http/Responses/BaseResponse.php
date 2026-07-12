@@ -39,9 +39,13 @@ abstract class BaseResponse implements Responsable
             : $this->data;
 
         if ($paginator instanceof LengthAwarePaginator) {
-            $items = ($this->data instanceof JsonResource)
-                ? $this->data->resolve()
-                : $paginator->items();
+
+            if ($this->data instanceof ResourceCollection) {
+
+                $items = $this->data->resolve();
+            } else {
+                $items = $paginator->items();
+            }
 
             return [
                 'data' => $items,

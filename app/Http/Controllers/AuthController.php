@@ -19,10 +19,10 @@ class AuthController extends Controller
         $user = $action->execute($data);
         $token = $user->createToken('auth-token')->plainTextToken;
 
-        return new SuccessResponse([
-            'user' => new UserResource($user),
+        return $this->successResponse([
+            'user' => UserResource::make($user),
             'token' => [
-                'user' => new UserResource($user),
+                'user' => UserResource::make($user),
                 'token' => $token,
             ],
         ], 201);
@@ -37,18 +37,12 @@ class AuthController extends Controller
         $user = Auth::user();
         $token = $user->createToken('auth-token')->plainTextToken;
 
-        return new SuccessResponse([
-            'user' => new UserResource($user),
+        return $this->successResponse([
+            'user' => UserResource::make($user),
             'token' => $token,
-        ], 200);
+        ]);
     }
 
-    /**
-     * Summary of logout
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

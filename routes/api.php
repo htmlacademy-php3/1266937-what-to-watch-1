@@ -15,7 +15,7 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::controller(FilmController::class)->group(function () {
     Route::get('/films', 'index');
-    Route::get('/films/{id}', 'show');
+    Route::get('/films/{film}', 'show');
     Route::get('/films/{film}/similar', 'similar');
     Route::get('/promo', 'showPromo');
 });
@@ -57,8 +57,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::controller(FavoriteController::class)->group(function () {
         Route::get('/favorite', 'index');
-        Route::post('/films/{id}/favorite/', 'store');
-        Route::delete('/films/{id}/favorite/', 'destroy');
+        Route::post('/films/{film}/favorite/', 'store');
+        Route::delete('/films/{film}/favorite/', 'destroy');
     });
 
     Route::controller(CommentController::class)->group(function () {

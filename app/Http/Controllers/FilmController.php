@@ -11,6 +11,7 @@ use App\Http\Responses\SuccessResponse;
 use App\Http\Requests\StoreFilmRequest;
 use App\Models\Film;
 use App\Http\Resources\FilmResource;
+use App\Http\Resources\FilmPreviewResource;
 use App\Queries\GetFilmQuery;
 use App\Jobs\ProcessFilm;
 use App\Http\Requests\UpdateFilmRequest;
@@ -33,9 +34,14 @@ class FilmController extends Controller
             'user_id' => $request->user()?->id,
         ];
 
-        $data = $query->execute($filters, perPage: 8);
+        $baseQuery = Film::query()->orderBy(
+            $filters['order_by'] ?? 'released',
+            $filters['order_to'] ?? 'desc'
+        );
 
-        return $this->successResponse(FilmResource::collection($data));
+        $data = $query->execute($filters, perPage: 8, baseQuery: $baseQuery);
+
+        return $this->successResponse(FilmPreviewResource::collection($data));
     }
 
     /**
@@ -91,13 +97,13 @@ class FilmController extends Controller
             perPage: 4
         );
 
-        return $this->successResponse(FilmResource::collection($films));
+        return $this->successResponse(FilmPreviewResource::collection($films));
     }
 
     /**
      * Display the promo film
      */
-    public function showPromo(GetFilmQuery $query)
+    public function showPromo(GetFilmQuery $query): SuccessResponse
     {
         $id = Cache::rememberForever(
             'promo_film_id',
@@ -115,7 +121,7 @@ class FilmController extends Controller
     /**
      * Set the specified film as promo
      */
-    public function setPromo(Film $film, SetPromoAction $action)
+    public function setPromo(Film $film, SetPromoAction $action): SuccessResponse
     {
         $film = $action->execute($film)->refresh();
 

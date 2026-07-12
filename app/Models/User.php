@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Attributes\WithoutTimestamps;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -96,7 +97,7 @@ class User extends Authenticatable
 
     public function favoriteFilms(): BelongsToMany
     {
-        return $this->belongsToMany(Film::class, 'favorite_film');
+        return $this->belongsToMany(Film::class, 'favorite_film')->withTimestamps();
     }
 
     public function role(): BelongsTo

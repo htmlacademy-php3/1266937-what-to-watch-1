@@ -11,8 +11,14 @@ class SuccessResponse extends BaseResponse
      */
     protected function makeResponseData(): ?array
     {
+        $preparedData = $this->prepareData();
+
+        if (isset($preparedData['current_page'])) {
+            return $preparedData;
+        }
+
         return [
-            'data' => $this->prepareData(),
+            'data' => $preparedData,
         ];
     }
 }
