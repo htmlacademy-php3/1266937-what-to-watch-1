@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Responses\SuccessResponse;
-use App\Actions\Auth\RegisterAction;
+use App\Actions\RegisterAction;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;

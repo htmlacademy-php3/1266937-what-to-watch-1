@@ -91,11 +91,7 @@ class FilmController extends Controller
      */
     public function similar(Request $request, Film $film, GetSimilarFilmsQuery $query): SuccessResponse
     {
-        $films = $query->execute(
-            film: $film,
-            userId: $request->user()?->id,
-            perPage: 4
-        );
+        $films = $query->execute($film, auth()->id());
 
         return $this->successResponse(FilmPreviewResource::collection($films));
     }

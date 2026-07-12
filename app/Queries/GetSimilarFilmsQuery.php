@@ -2,8 +2,9 @@
 
 namespace App\Queries;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\Film;
+use App\Enums\FilmStatus;
 
 class GetSimilarFilmsQuery
 {
@@ -13,27 +14,21 @@ class GetSimilarFilmsQuery
     }
 
     /**
-     * Execute the query to get similar films with pagination.
+     * Execute the query to get similar films.
      */
-    public function execute(Film $film, ?int $userId = null, int $perPage = 4): LengthAwarePaginator
+    public function execute(Film $film, ?int $userId = null, int $limit = 4): Collection
     {
-        $genreIds = $film->genres->pluck('id')->toArray();
+        $genreNames = $film->genres()->pluck('name');
 
-        if (empty($genreIds)) {
-            return app(LengthAwarePaginator::class, [
-                'items' => collect(),
-                'total' => 0,
-                'perPage' => $perPage
-            ]);
-        }
-
-        $query = Film::where('films.id', '!=', $film->id)
-            ->whereHas('genres', fn($q) => $q->whereIn('genres.id', $genreIds));
-
-        return $this->baseFilmsQuery->execute(
-            filters: ['user_id' => $userId],
-            perPage: $perPage,
-            baseQuery: $query
-        );
+        return Film::query()
+            ->withRating()
+            ->withIsFavorite($userId)
+            ->where('films.status', FilmStatus::Ready->value)
+            ->whereHas('genres', function ($query) use ($genreNames) {
+                $query->whereIn('name', $genreNames);
+            })
+            ->whereKeyNot($film->id)
+            ->limit($limit)
+            ->get();
     }
 }
