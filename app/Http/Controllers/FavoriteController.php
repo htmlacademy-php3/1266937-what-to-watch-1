@@ -36,7 +36,6 @@ class FavoriteController extends Controller
         $user = auth()->user();
 
         if ($user->favoriteFilms()->where('film_id', $film->id)->exists()) {
-
             return $this->failResponse(
                 statusCode: 422,
                 message: 'Этот фильм уже добавлен в Избранное'
@@ -58,7 +57,6 @@ class FavoriteController extends Controller
         $user = auth()->user();
 
         if (!$user->favoriteFilms()->where('film_id', $film->id)->exists()) {
-
             return $this->failResponse(
                 statusCode: 422,
                 message: 'Этот фильм отсутствует в списке Избранного'

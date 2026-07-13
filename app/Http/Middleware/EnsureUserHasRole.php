@@ -8,6 +8,9 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @psalm-api
+ */
 class EnsureUserHasRole
 {
     /**

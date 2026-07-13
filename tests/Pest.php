@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignoreFile
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

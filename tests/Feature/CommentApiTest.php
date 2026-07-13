@@ -14,8 +14,17 @@ it('shows newest comments first', function () {
     $film = Film::factory()->create(['status' => FilmStatus::Ready->value]);
     $user = User::factory()->create();
 
-    $oldComment = Comment::factory()->create(['film_id' => $film->id, 'user_id' => $user->id, 'created_at' => now()->subDay()]);
-    $newComment = Comment::factory()->create(['film_id' => $film->id, 'user_id' => $user->id, 'created_at' => now()]);
+    $oldComment = Comment::factory()->create([
+        'film_id' => $film->id,
+        'user_id' => $user->id,
+        'created_at' => now()->subDay()
+    ]);
+
+    $newComment = Comment::factory()->create([
+        'film_id' => $film->id,
+        'user_id' => $user->id,
+        'created_at' => now()
+    ]);
 
     $this->getJson("/api/comments/{$film->id}")
         ->assertStatus(200)
@@ -24,7 +33,17 @@ it('shows newest comments first', function () {
         ->assertJsonPath('data.1.id', $oldComment->id)
         ->assertJsonStructure([
             'data' => [
-                '*' => ['id', 'text', 'rating', 'user' => ['id', 'name'], 'user_id', 'film_id', 'comment_id', 'created_at', 'updated_at']
+                '*' => [
+                    'id',
+                    'text',
+                    'rating',
+                    'user' => ['id', 'name'],
+                    'user_id',
+                    'film_id',
+                    'comment_id',
+                    'created_at',
+                    'updated_at'
+                ]
             ]
         ]);
 });
@@ -41,20 +60,31 @@ it('denies guest from creating comment', function () {
 it('allows an authenticated user to create comment', function () {
     $user = User::factory()->create();
     $film = Film::factory()->create(['status' => FilmStatus::Ready->value]);
-    $commentData = ['text' => 'Это совершенно потрясающий фильм, который заслуживает наивысшей оценки от каждого зрителя.', 'rating' => 10];
+    $commentData = [
+        'text' => 'Это совершенно потрясающий фильм, который заслуживает наивысшей оценки от каждого зрителя.',
+        'rating' => 10
+    ];
 
     $this->actingAs($user)
         ->postJson("/api/comments/{$film->id}", $commentData)
         ->assertStatus(200);
 
-    $this->assertDatabaseHas('comments', ['film_id' => $film->id, 'user_id' => $user->id, 'text' => $commentData['text']]);
+    $this->assertDatabaseHas('comments', [
+        'film_id' => $film->id,
+        'user_id' => $user->id,
+        'text' => $commentData['text']
+    ]);
 });
 
 it('allows an authenticated user to reply to another comment', function () {
     $user = User::factory()->create();
     $film = Film::factory()->create(['status' => FilmStatus::Ready->value]);
     $parentComment = Comment::factory()->create(['film_id' => $film->id]);
-    $replyData = ['text' => 'Я полностью согласен с вашим мнением, этот комментарий идеально описывает всю суть кинокартины.', 'rating' => 9, 'comment_id' => $parentComment->id];
+    $replyData = [
+        'text' => 'Я полностью согласен с вашим мнением, этот комментарий идеально описывает всю суть кинокартины.',
+        'rating' => 9,
+        'comment_id' => $parentComment->id
+    ];
 
     $this->actingAs($user)
         ->postJson("/api/comments/{$film->id}", $replyData)
@@ -66,7 +96,11 @@ it('allows an authenticated user to reply to another comment', function () {
 it('allows an author to update comment', function () {
     $user = User::factory()->create();
     $comment = Comment::factory()->create(['user_id' => $user->id]);
-    $updateData = ['text' => 'Я решил полностью переписать свой отзыв, так как при повторном просмотре заметил много новых деталей.', 'rating' => 8];
+    $updateData = [
+        'text' => 'Я решил полностью переписать свой отзыв, ' .
+            'так как при повторном просмотре заметил много новых деталей.',
+        'rating' => 8
+    ];
 
     $this->actingAs($user)
         ->patchJson("/api/comments/{$comment->id}", $updateData)
@@ -83,7 +117,10 @@ it('allows a moderator to update any comment', function () {
     ]);
 
     $comment = Comment::factory()->create();
-    $updateData = ['text' => 'Данный текст был отредактирован дежурным модератором из-за нарушения действующих правил публикации.', 'rating' => 5];
+    $updateData = [
+        'text' => 'Данный текст был отредактирован дежурным модератором из-за нарушения действующих правил публикации.',
+        'rating' => 5
+    ];
 
     $this->actingAs($moderator)
         ->patchJson("/api/comments/{$comment->id}", $updateData)

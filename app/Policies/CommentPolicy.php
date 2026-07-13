@@ -7,7 +7,6 @@ use App\Models\User;
 
 class CommentPolicy
 {
-
     /**
      * Perform pre-authorization checks.
      */

@@ -13,7 +13,6 @@ use App\Queries\GetCommentsQuery;
 use App\Http\Requests\StoreCommentRequest;
 use App\Actions\CreateCommentAction;
 
-
 class CommentController extends Controller
 {
     /**

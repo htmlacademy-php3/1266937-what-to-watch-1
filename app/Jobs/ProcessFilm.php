@@ -8,18 +8,20 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\Middleware\RateLimited;
-use Exception;
 use App\Repositories\Interfaces\FilmRepositoryInterface;
 use App\Services\OmdbConverterService;
 use App\Models\Film;
 use App\Models\Genre;
-use \App\Models\Actor;
+use App\Models\Actor;
 use App\Models\Director;
 use App\Enums\FilmStatus;
 
 class ProcessFilm implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Create a new job instance.

@@ -7,7 +7,7 @@ use App\Models\User;
 
 uses(RefreshDatabase::class);
 
-it('shows user profile data', function () {
+it('allows an authenticated user to view profile data', function () {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)

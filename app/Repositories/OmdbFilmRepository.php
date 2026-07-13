@@ -10,7 +10,6 @@ class OmdbFilmRepository implements FilmRepositoryInterface
     private const string BASE_URL = 'http://omdbapi.com';
 
     public function __construct(
-
         private string $apiKey,
     ) {
     }

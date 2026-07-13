@@ -62,4 +62,3 @@ it('handles empty array keys safely', function () {
     $this->assertNull($result['released']);
     $this->assertEquals([], $result['genres']);
 });
-

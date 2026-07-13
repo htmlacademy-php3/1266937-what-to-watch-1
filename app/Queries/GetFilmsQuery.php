@@ -18,8 +18,12 @@ class GetFilmsQuery
      * @param Builder|Relation|null $baseQuery Optional pre-configured query or relation.
      * @return LengthAwarePaginator<Film> Paginated collection of film models.
      */
-    public function execute(array $filters, int $perPage = 8, Builder|Relation|null $baseQuery = null): LengthAwarePaginator
-    {
+    public function execute(
+        array $filters,
+        int $perPage = 8,
+        Builder|Relation|null $baseQuery = null
+    ): LengthAwarePaginator {
+
         $query = $baseQuery ?? Film::query();
 
         $query->withRating();

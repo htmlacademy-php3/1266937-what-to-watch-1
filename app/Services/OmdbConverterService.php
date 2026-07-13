@@ -4,11 +4,6 @@ namespace App\Services;
 
 class OmdbConverterService
 {
-    public function __construct()
-    {
-
-    }
-
     /**
      * Convert data from OMDb API into the DB format.
      *

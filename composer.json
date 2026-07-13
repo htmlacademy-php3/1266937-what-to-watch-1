@@ -28,7 +28,9 @@
         "nunomaduro/collision": "^8.6",
         "pestphp/pest-plugin-laravel": "^4.1",
         "phpunit/phpunit": "^12.5.12",
-        "reliese/laravel": "^1.4"
+        "reliese/laravel": "^1.4",
+        "squizlabs/php_codesniffer": "^4.0",
+        "vimeo/psalm": "^6.16"
     },
     "autoload": {
         "psr-4": {
