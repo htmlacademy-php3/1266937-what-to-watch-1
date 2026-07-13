@@ -2,18 +2,17 @@
 
 namespace App\Queries;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Film;
 
 final class GetFilmQuery
 {
     /**
-     * Get film by ID with all scopes and relations.
+     * Get film by ID with scopes and relations.
      *
-     * @param int $id
-     * @param int|null $userId     *
-     * @return Film|null
+     * @throws ModelNotFoundException
      */
-    public function execute(int $id, ?int $userId = null): ?Film
+    public function execute(int $id, ?int $userId = null): Film
     {
         return Film::query()
             ->with(['genres', 'actors', 'directors'])

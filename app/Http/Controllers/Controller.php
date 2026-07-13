@@ -32,6 +32,14 @@ abstract class Controller
         ]);
     }
 
+    /**
+     * Create a JSON fail response.
+     *
+     * @param mixed $data
+     * @param int $statusCode
+     * @param string|null $message
+     * @return FailResponse
+     */
     protected function failResponse(
         mixed $data = null,
         int $statusCode = Response::HTTP_OK,

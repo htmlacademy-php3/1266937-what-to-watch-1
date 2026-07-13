@@ -10,7 +10,9 @@ use App\Models\User;
 final class UpdateUserAction
 {
     /**
-     * Execute user profile update.
+     * Update user profile data.
+     *
+     * @param array<string, mixed> $data
      */
     public function handle(User $user, array $data, ?UploadedFile $file = null): User
     {

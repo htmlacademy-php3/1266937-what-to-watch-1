@@ -10,6 +10,8 @@ use App\Enums\RoleName;
 final class RegisterAction
 {
     /**
+     * Register a user, assign a role, generate an access token.
+     *
      * @param array<string, mixed> $data
      */
     public function execute(array $data): User

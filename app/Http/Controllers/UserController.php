@@ -14,7 +14,7 @@ use App\Http\Requests\UpdateUserRequest;
 class UserController extends Controller
 {
     /**
-     * Display the specified resource.
+     * Display the specified user profile.
      */
     public function show(Request $request): SuccessResponse
     {
@@ -26,7 +26,7 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified user profile in storage.
      */
     public function update(UpdateUserRequest $request, UpdateUserAction $action): SuccessResponse
     {

@@ -7,7 +7,17 @@ final class OmdbConverterService
     /**
      * Convert data from OMDb API into the DB format.
      *
-     * @param array $omdbData
+     * @param array<string, mixed> $omdbData
+     * @return array{
+     *     name: mixed,
+     *     poster_image: mixed,
+     *     description: mixed,
+     *     run_time: int|null,
+     *     released: int|null,
+     *     genres: array<int, string>,
+     *     actors: array<int, string>,
+     *     directors: array<int, string>
+     * }
      */
     public function convert(array $omdbData): array
     {

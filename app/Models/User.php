@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\DatabaseNotificationCollection;
+use Illuminate\Notifications\DatabaseNotification;
 use Laravel\Sanctum\HasApiTokens;
 use Database\Factories\UserFactory;
 use App\Enums\RoleName;
@@ -31,7 +33,7 @@ use App\Enums\RoleName;
  * @property-read int|null $comments_count
  * @property-read Collection<int, \App\Models\Film> $favoriteFilms
  * @property-read int|null $favorite_films_count
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \App\Models\Role $role
  * @property-read Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens

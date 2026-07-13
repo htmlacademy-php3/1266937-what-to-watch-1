@@ -9,7 +9,9 @@ use App\Enums\FilmStatus;
 final class GetSimilarFilmsQuery
 {
     /**
-     * Execute the query to get similar films.
+     * Get similar films by genres.
+     *
+     * @return Collection<int, Film>
      */
     public function execute(Film $film, ?int $userId = null, int $limit = 4): Collection
     {

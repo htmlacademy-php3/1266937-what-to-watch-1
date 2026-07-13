@@ -7,6 +7,11 @@ use App\Models\Comment;
 
 final class CreateCommentAction
 {
+    /**
+     * Create a new comment for a film.
+     *
+     * @param array<string, mixed> $data
+     */
     public function execute(Film $film, array $data, int $userId): Comment
     {
         return Comment::with('user')->create([

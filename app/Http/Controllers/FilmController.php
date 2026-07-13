@@ -24,7 +24,7 @@ use App\Actions\SetPromoAction;
 class FilmController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the films.
      */
     public function index(FilterFilmRequest $request, GetFilmsQuery $query): SuccessResponse
     {
@@ -48,7 +48,7 @@ class FilmController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created film in storage.
      */
     public function store(StoreFilmRequest $request): SuccessResponse
     {
@@ -66,7 +66,7 @@ class FilmController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified film.
      */
     public function show(string $id, GetFilmQuery $query): SuccessResponse
     {
@@ -78,7 +78,7 @@ class FilmController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified film in storage.
      */
     public function update(UpdateFilmRequest $request, Film $film): SuccessResponse
     {
@@ -88,7 +88,7 @@ class FilmController extends Controller
     }
 
     /**
-     * Display a listing of similar films
+     * Display a listing of similar films.
      */
     public function similar(Film $film, GetSimilarFilmsQuery $query): SuccessResponse
     {
@@ -100,7 +100,7 @@ class FilmController extends Controller
     }
 
     /**
-     * Display the promo film
+     * Display the promo film.
      */
     public function showPromo(GetFilmQuery $query): SuccessResponse
     {
@@ -117,7 +117,7 @@ class FilmController extends Controller
     }
 
     /**
-     * Set the specified film as promo
+     * Set the specified film as a promo.
      */
     public function setPromo(Film $film, SetPromoAction $action): SuccessResponse
     {

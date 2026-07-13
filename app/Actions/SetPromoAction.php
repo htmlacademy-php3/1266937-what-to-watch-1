@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Cache;
 
 final class SetPromoAction
 {
+    /**
+     * Set the film as a promo.
+     */
     public function execute(Film $film): Film
     {
         Film::query()->where('is_promo', true)->update(['is_promo' => false]);

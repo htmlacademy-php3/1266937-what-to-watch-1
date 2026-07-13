@@ -19,7 +19,7 @@ use App\Actions\CreateCommentAction;
 class CommentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the comments.
      */
     public function index(Film $film, GetCommentsQuery $query): SuccessResponse
     {
@@ -33,7 +33,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created comment in storage.
      */
     public function store(StoreCommentRequest $request, Film $film, CreateCommentAction $action): SuccessResponse
     {
@@ -48,7 +48,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified comment in storage.
      */
     public function update(UpdateCommentRequest $request, Comment $comment): SuccessResponse
     {
@@ -62,7 +62,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified comment from storage.
      */
     public function destroy(Comment $comment): SuccessResponse
     {

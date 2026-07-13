@@ -61,33 +61,45 @@ class ProcessFilm implements ShouldQueue
         $this->syncRelations($film, $filmData);
     }
 
+    /**
+     * Sync film relations.
+     *
+     * @param array{
+     *     genres: array<int, string>,
+     *     actors: array<int, string>,
+     *     directors: array<int, string>,
+     *     ...
+     * } $filmData
+     */
     private function syncRelations(Film $film, array $filmData): void
     {
         $genreIds = [];
-        /** @var mixed $name */
         foreach ($filmData['genres'] as $name) {
-            $genreIds[] = Genre::query()->firstOrCreate(['name' => (string) $name])->id;
+            $genreIds[] = Genre::query()->firstOrCreate(['name' => $name])->id;
         }
 
         $film->genres()->sync($genreIds);
 
-        /** @var mixed $name */
         $actorIds = [];
         foreach ($filmData['actors'] as $name) {
-            $actorIds[] = Actor::query()->firstOrCreate(['name' => (string) $name])->id;
+            $actorIds[] = Actor::query()->firstOrCreate(['name' => $name])->id;
         }
 
         $film->actors()->sync($actorIds);
 
         $directorIds = [];
-        /** @var mixed $name */
         foreach ($filmData['directors'] as $name) {
-            $directorIds[] = Director::query()->firstOrCreate(['name' => (string) $name])->id;
+            $directorIds[] = Director::query()->firstOrCreate(['name' => $name])->id;
         }
 
         $film->directors()->sync($directorIds);
     }
 
+    /**
+     * Apply rate limiting middleware to the job.
+     *
+     * @return array<int, object>
+     */
     public function middleware(): array
     {
         return [new RateLimited('film-api-limit')];

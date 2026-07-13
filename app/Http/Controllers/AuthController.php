@@ -6,6 +6,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Responses\SuccessResponse;
 use App\Actions\RegisterAction;
 use App\Http\Resources\UserResource;
@@ -18,6 +19,9 @@ use App\Models\User;
  */
 class AuthController extends Controller
 {
+    /**
+     * Register a new user.
+     */
     public function register(RegisterRequest $request, RegisterAction $action): SuccessResponse
     {
         $data = $request->safe()->except('file');
@@ -33,6 +37,9 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * Log in a user.
+     */
     public function login(LoginRequest $request): SuccessResponse
     {
         if (!Auth::attempt($request->validated())) {
@@ -49,7 +56,10 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(Request $request): \Illuminate\Http\Response
+    /**
+     * Log out a user.
+     */
+    public function logout(Request $request): Response
     {
         /** @var User $user */
         $user = $request->user();

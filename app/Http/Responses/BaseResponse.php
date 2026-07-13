@@ -31,8 +31,9 @@ abstract class BaseResponse implements Responsable
     }
 
     /**
+     * Prepare raw resource or paginator data for the response.
      *
-     * @return array
+     * @return array<array-key, mixed>
      */
     protected function prepareData(): array
     {

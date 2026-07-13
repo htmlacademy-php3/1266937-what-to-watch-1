@@ -20,10 +20,6 @@
         <file name="_ide_helper.php" />
     </extraFiles>
 
-    <issueHandlers>
-
-    </issueHandlers>
-
     <plugins>
         <pluginClass class="Psalm\LaravelPlugin\Plugin"></pluginClass>
     </plugins>
