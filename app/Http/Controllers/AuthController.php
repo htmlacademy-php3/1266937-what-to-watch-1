@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Request;
 use App\Http\Responses\SuccessResponse;
 use App\Actions\RegisterAction;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Http\Request;
+use App\Models\User;
 
+/**
+ * @psalm-api
+ */
 class AuthController extends Controller
 {
     public function register(RegisterRequest $request, RegisterAction $action): SuccessResponse
@@ -34,6 +39,7 @@ class AuthController extends Controller
             throw ValidationException::withMessages(['email' => [trans('auth.failed')]]);
         }
 
+        /** @var User $user */
         $user = Auth::user();
         $token = $user->createToken('auth-token')->plainTextToken;
 
@@ -43,9 +49,14 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): \Illuminate\Http\Response
     {
-        $request->user()->currentAccessToken()->delete();
+        /** @var User $user */
+        $user = $request->user();
+        /** @var PersonalAccessToken $token */
+        $token = $user->currentAccessToken();
+
+        $token->delete();
 
         return response()->noContent();
     }

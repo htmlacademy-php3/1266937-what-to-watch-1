@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Enums\FilmStatus;
 
-class FilterFilmRequest extends FormRequest
+final class FilterFilmRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,6 +22,7 @@ class FilterFilmRequest extends FormRequest
     /**
      * Prepare the data for validation.
      */
+    #[\Override]
     protected function prepareForValidation(): void
     {
         if (!$this->has('status') || $this->input('status') === null) {

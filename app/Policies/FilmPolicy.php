@@ -6,6 +6,9 @@ use App\Models\User;
 use App\Models\Film;
 use App\Enums\FilmStatus;
 
+/**
+ * @psalm-api
+ */
 class FilmPolicy
 {
     /**

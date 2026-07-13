@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Repositories\Interfaces\FilmRepositoryInterface;
 use Illuminate\Support\Facades\Http;
 
-class OmdbFilmRepository implements FilmRepositoryInterface
+final class OmdbFilmRepository implements FilmRepositoryInterface
 {
     private const string BASE_URL = 'http://omdbapi.com';
 
@@ -14,6 +14,7 @@ class OmdbFilmRepository implements FilmRepositoryInterface
     ) {
     }
 
+    #[\Override]
     public function getFilmById(string $id): ?array
     {
         $response = Http::get(self::BASE_URL, [
@@ -21,10 +22,14 @@ class OmdbFilmRepository implements FilmRepositoryInterface
             'i' => $id,
         ]);
 
+        /** @var \Illuminate\Http\Client\Response $response */
         if ($response->failed() || ($response['Response'] ?? '') === 'False') {
             return null;
         }
 
-        return $response->json();
+        /** @var array|null $data */
+        $data = $response->json();
+
+        return $data;
     }
 }

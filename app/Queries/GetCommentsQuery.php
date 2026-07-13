@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Models\Film;
 use App\Models\Comment;
 
-class GetCommentsQuery
+final class GetCommentsQuery
 {
     /**
      * Execute the query to get film reviews.

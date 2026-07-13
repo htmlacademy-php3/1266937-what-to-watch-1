@@ -18,6 +18,9 @@ use App\Http\Requests\UpdateFilmRequest;
 use App\Queries\GetSimilarFilmsQuery;
 use App\Actions\SetPromoAction;
 
+/**
+ * @psalm-api
+ */
 class FilmController extends Controller
 {
     /**
@@ -27,7 +30,7 @@ class FilmController extends Controller
     {
         $validated = $request->validated();
 
-        Gate::authorize('viewAny', [Film::class, $validated['status']]);
+        Gate::authorize('viewAny', [Film::class, $validated['status'] ?? null]);
 
         $filters = [
             ...$validated,
@@ -47,17 +50,17 @@ class FilmController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFilmRequest $request)
+    public function store(StoreFilmRequest $request): SuccessResponse
     {
         $data = $request->validated();
 
-        $film = Film::create([
+        $film = Film::query()->create([
             'imdb_id' => $data['imdb_id'],
             'name' => 'Загрузка...',
             'status' => 'pending',
         ]);
 
-        ProcessFilm::dispatch($data['imdb_id']);
+        ProcessFilm::dispatch((string) $data['imdb_id']);
 
         return $this->successResponse($film, 201);
     }
@@ -67,9 +70,9 @@ class FilmController extends Controller
      */
     public function show(string $id, GetFilmQuery $query): SuccessResponse
     {
-        $userId = auth()->id();
+        $userId = (int) auth()->id();
 
-        $film = $query->execute($id, $userId);
+        $film = $query->execute((int) $id, $userId);
 
         return $this->successResponse(FilmResource::make($film));
     }
@@ -87,9 +90,11 @@ class FilmController extends Controller
     /**
      * Display a listing of similar films
      */
-    public function similar(Request $request, Film $film, GetSimilarFilmsQuery $query): SuccessResponse
+    public function similar(Film $film, GetSimilarFilmsQuery $query): SuccessResponse
     {
-        $films = $query->execute($film, auth()->id());
+        $userId = (int) auth()->id() ?: null;
+
+        $films = $query->execute($film, $userId);
 
         return $this->successResponse(FilmPreviewResource::collection($films));
     }
@@ -101,13 +106,12 @@ class FilmController extends Controller
     {
         $id = Cache::rememberForever(
             'promo_film_id',
-            fn() => Film::where(
-                'is_promo',
-                true
-            )->first()?->id
+            static fn() => Film::query()->where('is_promo', true)->first()?->id
         );
 
-        $promoFilm = $query->execute($id, auth()->id());
+        $userId = (int) auth()->id() ?: null;
+
+        $promoFilm = $query->execute((int) $id, $userId);
 
         return $this->successResponse(FilmResource::make($promoFilm));
     }

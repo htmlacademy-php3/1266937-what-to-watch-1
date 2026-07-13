@@ -4,7 +4,7 @@ namespace App\Queries;
 
 use App\Models\Film;
 
-class GetFilmQuery
+final class GetFilmQuery
 {
     /**
      * Get film by ID with all scopes and relations.

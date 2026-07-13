@@ -20,11 +20,13 @@ class EnsureUserHasRole
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        if (!$request->user()) {
+        $user = $request->user();
+
+        if (!$user) {
             throw new AuthenticationException();
         }
 
-        if (!\in_array($request->user()->role->name, $roles)) {
+        if (!\in_array($user->role->name, $roles, true)) {
             throw new AuthorizationException();
         }
 

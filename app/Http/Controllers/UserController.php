@@ -8,6 +8,9 @@ use App\Http\Resources\UserResource;
 use App\Actions\UpdateUserAction;
 use App\Http\Requests\UpdateUserRequest;
 
+/**
+ * @psalm-api
+ */
 class UserController extends Controller
 {
     /**
@@ -15,7 +18,9 @@ class UserController extends Controller
      */
     public function show(Request $request): SuccessResponse
     {
-        $user = $request->user()->load('role');
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+        $user->load('role');
 
         return $this->successResponse(UserResource::make($user));
     }
@@ -25,12 +30,18 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, UpdateUserAction $action): SuccessResponse
     {
-        $user = $action->handle(
-            $request->user(),
-            $request->validated(),
-            $request->file('file')
-        );
+        $data = $request->validated();
 
-        return $this->successResponse(UserResource::make($user));
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
+        /** @var \Illuminate\Http\UploadedFile|null $file */
+        $file = $request->file('file') instanceof \Illuminate\Http\UploadedFile
+            ? $request->file('file')
+            : null;
+
+        $updatedUser = $action->handle($user, $data, $file);
+
+        return $this->successResponse(UserResource::make($updatedUser));
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -66,6 +65,9 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static Builder<static>|Film whereVideoLink($value)
  * @method static Builder<static>|Film withRating()
  * @mixin \Eloquent
+ *
+ *
+ * @psalm-api
  */
 class Film extends Model
 {
@@ -119,9 +121,11 @@ class Film extends Model
 
     /**
      * Scope a query to include the average rating of the film.
+     *
+     * @psalm-return Builder<Model>
      */
     #[Scope]
-    protected function withRating(Builder $query)
+    protected function withRating(Builder $query): Builder
     {
         return $query->withAvg('comments as rating', 'rating')->withCasts(['rating' => 'decimal:1']);
     }
@@ -141,14 +145,14 @@ class Film extends Model
     #[Scope]
     protected function withIsFavorite(Builder $query, ?int $userId): void
     {
-        if (!$userId) {
+        if ($userId === null) {
             $query->selectRaw('false as is_favorite');
 
             return;
         }
 
         $query->withExists([
-            'favoritedByUsers as is_favorite' => fn($q) => $q->where('user_id', $userId),
+            'favoritedByUsers as is_favorite' => static fn(Builder $q): Builder => $q->where('user_id', $userId),
         ]);
     }
 }

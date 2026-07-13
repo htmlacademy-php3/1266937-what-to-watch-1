@@ -7,21 +7,26 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Role;
 use App\Enums\RoleName;
 
-class RegisterAction
+final class RegisterAction
 {
+    /**
+     * @param array<string, mixed> $data
+     */
     public function execute(array $data): User
     {
-        $role = Role::firstOrCreate(['name' => RoleName::User->value]);
+        $role = Role::query()->firstOrCreate(['name' => RoleName::User->value]);
 
-        $filePath = request()->hasFile('file')
-            ? request()->file('file')->store('avatars', 'public')
+        $file = request()->file('file');
+
+        $filePath = $file instanceof \Illuminate\Http\UploadedFile
+            ? $file->store('avatars', 'public')
             : null;
 
-        return User::create([
+        return User::query()->create([
             'name' => $data['name'],
             'role_id' => $role->id,
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => Hash::make((string) $data['password']),
             'file' => $filePath,
         ]);
     }

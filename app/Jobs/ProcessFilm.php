@@ -16,6 +16,9 @@ use App\Models\Actor;
 use App\Models\Director;
 use App\Enums\FilmStatus;
 
+/**
+ * @psalm-api
+ */
 class ProcessFilm implements ShouldQueue
 {
     use Dispatchable;
@@ -37,9 +40,13 @@ class ProcessFilm implements ShouldQueue
     {
         $externalData = $filmRepository->getFilmById($this->imdbId);
 
+        if ($externalData === null) {
+            return;
+        }
+
         $filmData = $converter->convert($externalData);
 
-        $film = Film::where('imdb_id', $this->imdbId)->firstOrFail();
+        $film = Film::query()->where('imdb_id', $this->imdbId)->firstOrFail();
 
         $film->name = $filmData['name'];
         $film->poster_image = $filmData['poster_image'];
@@ -47,7 +54,7 @@ class ProcessFilm implements ShouldQueue
         $film->run_time = $filmData['run_time'];
         $film->released = $filmData['released'];
 
-        $film->status = FilmStatus::OnModeration;
+        $film->status = FilmStatus::OnModeration->value;
 
         $film->save();
 
@@ -57,22 +64,25 @@ class ProcessFilm implements ShouldQueue
     private function syncRelations(Film $film, array $filmData): void
     {
         $genreIds = [];
+        /** @var mixed $name */
         foreach ($filmData['genres'] as $name) {
-            $genreIds[] = Genre::firstOrCreate(['name' => $name])->id;
+            $genreIds[] = Genre::query()->firstOrCreate(['name' => (string) $name])->id;
         }
 
         $film->genres()->sync($genreIds);
 
+        /** @var mixed $name */
         $actorIds = [];
         foreach ($filmData['actors'] as $name) {
-            $actorIds[] = Actor::firstOrCreate(['name' => $name])->id;
+            $actorIds[] = Actor::query()->firstOrCreate(['name' => (string) $name])->id;
         }
 
         $film->actors()->sync($actorIds);
 
         $directorIds = [];
+        /** @var mixed $name */
         foreach ($filmData['directors'] as $name) {
-            $directorIds[] = Director::firstOrCreate(['name' => $name])->id;
+            $directorIds[] = Director::query()->firstOrCreate(['name' => (string) $name])->id;
         }
 
         $film->directors()->sync($directorIds);

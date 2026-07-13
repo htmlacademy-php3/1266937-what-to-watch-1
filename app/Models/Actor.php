@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Actor whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Actor whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
+ * @psalm-api
  */
 class Actor extends Model
 {

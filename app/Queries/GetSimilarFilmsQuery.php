@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Models\Film;
 use App\Enums\FilmStatus;
 
-class GetSimilarFilmsQuery
+final class GetSimilarFilmsQuery
 {
     /**
      * Execute the query to get similar films.
@@ -19,7 +19,7 @@ class GetSimilarFilmsQuery
             ->withRating()
             ->withIsFavorite($userId)
             ->where('films.status', FilmStatus::Ready->value)
-            ->whereHas('genres', function ($query) use ($genreNames) {
+            ->whereHas('genres', function (\Illuminate\Database\Eloquent\Builder $query) use ($genreNames) {
                 $query->whereIn('name', $genreNames);
             })
             ->whereKeyNot($film->id)

@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Contracts\Support\Arrayable;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class BaseResponse implements Responsable
@@ -23,6 +24,7 @@ abstract class BaseResponse implements Responsable
      * @param mixed $request
      * @return JsonResponse
      */
+    #[\Override]
     public function toResponse($request): JsonResponse
     {
         return response()->json($this->makeResponseData(), $this->statusCode);

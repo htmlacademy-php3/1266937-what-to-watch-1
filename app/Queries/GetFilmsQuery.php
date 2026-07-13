@@ -8,7 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Models\Film;
 use App\Enums\FilmStatus;
 
-class GetFilmsQuery
+final class GetFilmsQuery
 {
     /**
      * Execute the query to get filtered films with pagination.
@@ -16,7 +16,7 @@ class GetFilmsQuery
      * @param array $filters Filters options.
      * @param int $perPage Items per page.
      * @param Builder|Relation|null $baseQuery Optional pre-configured query or relation.
-     * @return LengthAwarePaginator<Film> Paginated collection of film models.
+     * @return LengthAwarePaginator<int, Film> Paginated collection of film models.
      */
     public function execute(
         array $filters,
@@ -24,6 +24,7 @@ class GetFilmsQuery
         Builder|Relation|null $baseQuery = null
     ): LengthAwarePaginator {
 
+        /** @var Builder<Film> $query */
         $query = $baseQuery ?? Film::query();
 
         $query->withRating();

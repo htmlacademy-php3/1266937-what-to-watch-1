@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Enums\FilmStatus;
 
-class UpdateFilmRequest extends FormRequest
+final class UpdateFilmRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +24,7 @@ class UpdateFilmRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var \App\Models\Film $film */
         $film = $this->route('film');
 
         return [
@@ -104,7 +105,7 @@ class UpdateFilmRequest extends FormRequest
                 'required',
                 'string',
                 'regex:/^tt\d+$/',
-                Rule::unique('films', 'imdb_id')->ignore($film?->id),
+                Rule::unique('films', 'imdb_id')->ignore($film->id),
             ],
 
             'status' => [

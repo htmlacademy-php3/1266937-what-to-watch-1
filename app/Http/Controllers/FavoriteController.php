@@ -6,16 +6,23 @@ use App\Queries\GetFilmsQuery;
 use App\Http\Resources\FilmPreviewResource;
 use App\Models\Film;
 
+/**
+ * @psalm-api
+ */
 class FavoriteController extends Controller
 {
     /**
      * Display a listing of the favorite films.
      */
-    public function index(GetFilmsQuery $query)
+    public function index(GetFilmsQuery $query): \App\Http\Responses\SuccessResponse
     {
-        $baseQuery = auth()->user()
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        $baseQuery = $user
             ->favoriteFilms()
-            ->latest('favorite_film.id');
+            ->latest('favorite_film.id')
+            ->getQuery();
 
         $filters = [
             'user_id' => auth()->id(),
@@ -28,11 +35,14 @@ class FavoriteController extends Controller
 
     /**
      * Store a newly created favorite film in storage.
+     *
+     * @return \App\Http\Responses\FailResponse|\App\Http\Responses\SuccessResponse
      */
-    public function store(Film $film)
+    public function store(Film $film): \App\Http\Responses\SuccessResponse|\App\Http\Responses\FailResponse
     {
         $this->authorize('view', $film);
 
+        /** @var \App\Models\User $user */
         $user = auth()->user();
 
         if ($user->favoriteFilms()->where('film_id', $film->id)->exists()) {
@@ -49,11 +59,14 @@ class FavoriteController extends Controller
 
     /**
      * Remove the favorite film from storage.
+     *
+     * @return \App\Http\Responses\FailResponse|\App\Http\Responses\SuccessResponse
      */
-    public function destroy(Film $film)
+    public function destroy(Film $film): \App\Http\Responses\SuccessResponse|\App\Http\Responses\FailResponse
     {
         $this->authorize('view', $film);
 
+        /** @var \App\Models\User $user */
         $user = auth()->user();
 
         if (!$user->favoriteFilms()->where('film_id', $film->id)->exists()) {

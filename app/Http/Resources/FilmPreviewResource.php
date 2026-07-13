@@ -9,13 +9,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @mixin \App\Models\Film
  */
 
-class FilmPreviewResource extends JsonResource
+final class FilmPreviewResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
+    #[\Override]
     public function toArray(Request $request): array
     {
         return [

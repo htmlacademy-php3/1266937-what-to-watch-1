@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use App\Models\User;
 
-class UpdateUserAction
+final class UpdateUserAction
 {
     /**
      * Execute user profile update.
@@ -21,9 +21,7 @@ class UpdateUserAction
         }
 
         if ($file) {
-            if ($user->file) {
-                Storage::disk('public')->delete($user->file);
-            }
+            filled($user->file) && Storage::disk('public')->delete($user->file);
 
             $data['file'] = $file->store('files', 'public');
         }

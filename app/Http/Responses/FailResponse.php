@@ -2,6 +2,11 @@
 
 namespace App\Http\Responses;
 
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * @psalm-api
+ */
 class FailResponse extends BaseResponse
 {
     public function __construct(
@@ -17,6 +22,7 @@ class FailResponse extends BaseResponse
      *
      * @return array{message: string|null, errors?: array<string, mixed>}
      */
+    #[\Override]
     public function makeResponseData(): array
     {
         $response = [

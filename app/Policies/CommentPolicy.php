@@ -5,12 +5,15 @@ namespace App\Policies;
 use App\Models\Comment;
 use App\Models\User;
 
+/**
+ * @psalm-api
+ */
 class CommentPolicy
 {
     /**
      * Perform pre-authorization checks.
      */
-    public function before(User $user, string $ability): ?bool
+    public function before(User $user, string $_ability): ?bool
     {
         if ($user->isModerator()) {
             return true;

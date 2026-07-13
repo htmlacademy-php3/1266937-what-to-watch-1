@@ -9,20 +9,21 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @mixin \App\Models\User
  */
 
-class UserResource extends JsonResource
+final class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
+    #[\Override]
     public function toArray(Request $request): array
     {
         return [
             'name' => $this->name,
             'email' => $this->email,
             'file' => $this->file,
-            'role' => $this->role?->name,
+            'role' => $this->role->name,
         ];
     }
 }

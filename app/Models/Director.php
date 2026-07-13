@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Director whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Director whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
+ * @psalm-api
  */
 class Director extends Model
 {

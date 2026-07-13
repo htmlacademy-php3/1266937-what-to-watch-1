@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateGenreRequest extends FormRequest
+final class UpdateGenreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,6 +23,7 @@ class UpdateGenreRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var \App\Models\Genre $genre */
         $genre = $this->route('genre');
 
         return [

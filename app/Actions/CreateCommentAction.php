@@ -5,7 +5,7 @@ namespace App\Actions;
 use App\Models\Film;
 use App\Models\Comment;
 
-class CreateCommentAction
+final class CreateCommentAction
 {
     public function execute(Film $film, array $data, int $userId): Comment
     {

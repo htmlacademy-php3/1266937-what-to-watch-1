@@ -13,6 +13,9 @@ use App\Queries\GetCommentsQuery;
 use App\Http\Requests\StoreCommentRequest;
 use App\Actions\CreateCommentAction;
 
+/**
+ * @psalm-api
+ */
 class CommentController extends Controller
 {
     /**
@@ -32,9 +35,9 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCommentRequest $request, Film $film, CreateCommentAction $action)
+    public function store(StoreCommentRequest $request, Film $film, CreateCommentAction $action): SuccessResponse
     {
-        $userId = auth()->id();
+        $userId = (int) auth()->id();
         $validated = $request->validated();
 
         $comment = $action->execute($film, $validated, $userId);
@@ -47,7 +50,7 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCommentRequest $request, Comment $comment)
+    public function update(UpdateCommentRequest $request, Comment $comment): SuccessResponse
     {
         Gate::authorize('update', $comment);
 
@@ -61,11 +64,11 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment): SuccessResponse
     {
         Gate::authorize('delete', $comment);
 
-        $comment->replies()->delete();
+        $comment->replies()->newQuery()->delete();
 
         $comment->delete();
 

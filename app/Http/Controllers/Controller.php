@@ -7,6 +7,9 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Responses\SuccessResponse;
 use App\Http\Responses\FailResponse;
 
+/**
+ * @psalm-api
+ */
 abstract class Controller
 {
     use AuthorizesRequests;
