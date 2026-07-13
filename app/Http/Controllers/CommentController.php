@@ -35,8 +35,6 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request, Film $film, CreateCommentAction $action)
     {
-        Gate::authorize('create', Comment::class);
-
         $userId = auth()->id();
         $validated = $request->validated();
 

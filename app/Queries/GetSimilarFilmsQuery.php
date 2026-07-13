@@ -8,11 +8,6 @@ use App\Enums\FilmStatus;
 
 class GetSimilarFilmsQuery
 {
-    public function __construct(
-        protected GetFilmsQuery $baseFilmsQuery
-    ) {
-    }
-
     /**
      * Execute the query to get similar films.
      */

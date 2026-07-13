@@ -73,12 +73,12 @@ return Application::configure(basePath: dirname(__DIR__))
 
         );
 
-        // $exceptions->render(
-        //     fn(\Throwable $e) =>
-        //     new FailResponse(
-        //         message: 'Внутренняя ошибка сервера.',
-        //         statusCode: 500
-        //     )
-        // );
+        $exceptions->render(
+            fn(\Throwable $e) =>
+            new FailResponse(
+                message: 'Внутренняя ошибка сервера.',
+                statusCode: 500
+            )
+        );
 
     })->create();

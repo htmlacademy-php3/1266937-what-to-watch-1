@@ -17,7 +17,7 @@ class GenreController extends Controller
     {
         $genres = Genre::all();
 
-        return $this->successResponse($genres);
+        return $this->successResponse($genres->toArray());
     }
 
     /**
@@ -31,6 +31,6 @@ class GenreController extends Controller
     {
         $genre->update($request->validated());
 
-        return $this->successResponse($genre);
+        return $this->successResponse($genre->toArray());
     }
 }

@@ -67,7 +67,7 @@ class FilmController extends Controller
      */
     public function show(string $id, GetFilmQuery $query): SuccessResponse
     {
-        $userId = auth('sanctum')->id();
+        $userId = auth()->id();
 
         $film = $query->execute($id, $userId);
 
@@ -79,8 +79,6 @@ class FilmController extends Controller
      */
     public function update(UpdateFilmRequest $request, Film $film): SuccessResponse
     {
-        Gate::authorize('update', $film);
-
         $film->update($request->validated());
 
         return $this->successResponse(FilmResource::make($film));
@@ -109,7 +107,7 @@ class FilmController extends Controller
             )->first()?->id
         );
 
-        $promoFilm = $query->execute($id, auth('sanctum')->id());
+        $promoFilm = $query->execute($id, auth()->id());
 
         return $this->successResponse(FilmResource::make($promoFilm));
     }

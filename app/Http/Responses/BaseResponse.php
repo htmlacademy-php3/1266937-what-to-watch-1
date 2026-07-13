@@ -67,7 +67,6 @@ abstract class BaseResponse implements Responsable
         }
 
         return (array) $this->data;
-
     }
 
     /**

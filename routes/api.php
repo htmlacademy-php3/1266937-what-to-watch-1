@@ -39,9 +39,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/user', 'update');
     });
 
-
-    // ИСПРАВИТЬ роль !!!
-
     Route::middleware('role:moderator')->group(function () {
         Route::controller(GenreController::class)->group(function () {
             Route::patch('/genres/{genre}', 'update');

@@ -11,13 +11,18 @@ class RegisterAction
 {
     public function execute(array $data): User
     {
-        $role = Role::where('name', RoleName::User->value)->firstOrFail();
+        $role = Role::firstOrCreate(['name' => RoleName::User->value]);
+
+        $filePath = request()->hasFile('file')
+            ? request()->file('file')->store('avatars', 'public')
+            : null;
 
         return User::create([
             'name' => $data['name'],
             'role_id' => $role->id,
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'file' => $filePath,
         ]);
     }
 }
