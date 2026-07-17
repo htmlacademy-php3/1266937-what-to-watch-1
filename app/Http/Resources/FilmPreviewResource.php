@@ -6,10 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin \App\Models\User
+ * @mixin \App\Models\Film
  */
 
-final class UserResource extends JsonResource
+final class FilmPreviewResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,10 +20,10 @@ final class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->email,
-            'file' => $this->file,
-            'role' => $this->role->name,
+            'preview_image' => $this->preview_image,
+            'preview_video_link' => $this->preview_video_link
         ];
     }
 }

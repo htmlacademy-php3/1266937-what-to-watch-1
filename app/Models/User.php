@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,7 +9,10 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\DatabaseNotificationCollection;
+use Illuminate\Notifications\DatabaseNotification;
 use Laravel\Sanctum\HasApiTokens;
+use Database\Factories\UserFactory;
 use App\Enums\RoleName;
 
 /**
@@ -31,7 +33,7 @@ use App\Enums\RoleName;
  * @property-read int|null $comments_count
  * @property-read Collection<int, \App\Models\Film> $favoriteFilms
  * @property-read int|null $favorite_films_count
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \App\Models\Role $role
  * @property-read Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
@@ -51,12 +53,17 @@ use App\Enums\RoleName;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRoleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
+ *
+ * @psalm-api
  */
 
 class User extends Authenticatable
 {
+    use HasApiTokens;
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     protected $fillable = [
         'name',
@@ -81,6 +88,7 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -96,7 +104,7 @@ class User extends Authenticatable
 
     public function favoriteFilms(): BelongsToMany
     {
-        return $this->belongsToMany(Film::class, 'favorite_film');
+        return $this->belongsToMany(Film::class, 'favorite_film')->withTimestamps();
     }
 
     public function role(): BelongsTo
@@ -106,6 +114,6 @@ class User extends Authenticatable
 
     public function isModerator(): bool
     {
-        return $this->role && $this->role->name === RoleName::Moderator->value;
+        return $this->role->name === RoleName::Moderator->value;
     }
 }

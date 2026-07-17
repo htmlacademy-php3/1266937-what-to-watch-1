@@ -8,19 +8,23 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Models\Film;
 use App\Enums\FilmStatus;
 
-class FetchFilmsQuery
+final class GetFilmsQuery
 {
     /**
-     * Fetch filtered and paginated films.
+     * Execute the query to get filtered films with pagination.
      *
-     * @param array $filters Filters and sorting oprions.
+     * @param array $filters Filters options.
      * @param int $perPage Items per page.
      * @param Builder|Relation|null $baseQuery Optional pre-configured query or relation.
-     *
-     * @return LengthAwarePaginator<Film> Paginated collection of film models.
+     * @return LengthAwarePaginator<int, Film> Paginated collection of film models.
      */
-    public function execute(array $filters, int $perPage = 8, Builder|Relation|null $baseQuery = null): LengthAwarePaginator
-    {
+    public function execute(
+        array $filters,
+        int $perPage = 8,
+        Builder|Relation|null $baseQuery = null
+    ): LengthAwarePaginator {
+
+        /** @var Builder<Film> $query */
         $query = $baseQuery ?? Film::query();
 
         $query->withRating();
@@ -28,17 +32,12 @@ class FetchFilmsQuery
 
         $status = $filters['status'] ?? FilmStatus::Ready->value;
 
-        $query->where('status', $status);
+        $query->where('films.status', $status);
 
         if (!empty($filters['genre'])) {
             $query->whereRelation('genres', 'name', $filters['genre']);
         }
 
-        return $query
-            ->orderBy(
-                $filters['order_by'] ?? 'released',
-                $filters['order_to'] ?? 'desc'
-            )
-            ->paginate($perPage);
+        return $query->paginate($perPage);
     }
 }

@@ -2,16 +2,24 @@
 
 namespace App\Http\Responses;
 
-class SuccessResponse extends BaseResponse
+final class SuccessResponse extends BaseResponse
 {
     /**
-     *
-     * @return array
+     * @inheritDoc
+
+     * @return array<string, mixed>|null
      */
-    protected function makeResponseData(): array
+    #[\Override]
+    protected function makeResponseData(): ?array
     {
+        $preparedData = $this->prepareData();
+
+        if (isset($preparedData['current_page'])) {
+            return $preparedData;
+        }
+
         return [
-            'data' => $this->prepareData()
+            'data' => $preparedData,
         ];
     }
 }

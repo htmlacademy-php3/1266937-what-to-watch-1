@@ -9,13 +9,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @mixin \App\Models\Film
  */
 
-class FilmResource extends JsonResource
+final class FilmResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
+    #[\Override]
     public function toArray(Request $request): array
     {
         return [
@@ -35,7 +36,7 @@ class FilmResource extends JsonResource
             'run_time' => $this->run_time,
             'genres' => $this->genres->pluck('name'),
             'released' => $this->released,
-            'is_favorite' => $this->is_favorite ?? false,
+            'is_favorite' => $this->is_favorite,
         ];
     }
 }

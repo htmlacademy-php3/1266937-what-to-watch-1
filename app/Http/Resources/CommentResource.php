@@ -9,13 +9,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @mixin \App\Models\Comment
  */
 
-class CommentResource extends JsonResource
+final class CommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
+    #[\Override]
     public function toArray(Request $request): array
     {
         return [
@@ -30,7 +31,8 @@ class CommentResource extends JsonResource
             'film_id' => $this->film_id,
             'comment_id' => $this->comment_id,
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'updated_at' => $this->updated_at,
+            'replies' => CommentResource::collection($this->whenLoaded('replies')),
         ];
     }
 }

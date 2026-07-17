@@ -41,6 +41,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Comment whereUserId($value)
  * @mixin \Eloquent
+ *
+ * @psalm-api
  */
 class Comment extends Model
 {

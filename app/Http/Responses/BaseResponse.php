@@ -5,33 +5,58 @@ namespace App\Http\Responses;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Contracts\Support\Arrayable;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class BaseResponse implements Responsable
 {
     public function __construct(
         protected mixed $data = [],
-        public int $statusCode = RESPONSE::HTTP_OK
-
+        public int $statusCode = Response::HTTP_OK
     ) {
     }
 
     /**
-     * Create an HTTP response that represents the object
+     * Create an HTTP response that represents the object.
+     *
      * @param mixed $request
      * @return JsonResponse
      */
+    #[\Override]
     public function toResponse($request): JsonResponse
     {
         return response()->json($this->makeResponseData(), $this->statusCode);
     }
 
     /**
+     * Prepare raw resource or paginator data for the response.
      *
-     * @return array
+     * @return array<array-key, mixed>
      */
     protected function prepareData(): array
     {
+        $paginator = ($this->data instanceof ResourceCollection)
+            ? $this->data->resource
+            : $this->data;
+
+        if ($paginator instanceof LengthAwarePaginator) {
+            $items = ($this->data instanceof ResourceCollection)
+                ? $this->data->resolve()
+                : $paginator->items();
+
+            return [
+                'data' => $items,
+                'current_page' => $paginator->currentPage(),
+                'first_page_url' => $paginator->url(1),
+                'next_page_url' => $paginator->nextPageUrl(),
+                'prev_page_url' => $paginator->previousPageUrl(),
+                'per_page' => $paginator->perPage(),
+                'total' => $paginator->total(),
+            ];
+        }
+
         if ($this->data instanceof JsonResource) {
             return $this->data->resolve();
         }
@@ -41,12 +66,12 @@ abstract class BaseResponse implements Responsable
         }
 
         return (array) $this->data;
-
     }
 
     /**
+     * Format structured response data for API.
      *
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     abstract protected function makeResponseData(): ?array;
 }

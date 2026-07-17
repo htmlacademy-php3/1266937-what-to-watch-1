@@ -27,6 +27,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Genre whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Genre whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
+ *
+ * @psalm-api
  */
 class Genre extends Model
 {

@@ -5,15 +5,16 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\User;
 
-final class UpdateGenreRequest extends FormRequest
+final class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()?->isModerator() ?? false;
+        return true;
     }
 
     /**
@@ -23,15 +24,31 @@ final class UpdateGenreRequest extends FormRequest
      */
     public function rules(): array
     {
-        /** @var \App\Models\Genre $genre */
-        $genre = $this->route('genre');
+        $userId = $this->user()?->id;
 
         return [
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique(User::class)->ignore($userId),
+            ],
+            'password' => [
+                'nullable',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
             'name' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('genres')->ignore($genre->id),
+            ],
+            'file' => [
+                'nullable',
+                'image',
+                'max:10240',
             ],
         ];
     }

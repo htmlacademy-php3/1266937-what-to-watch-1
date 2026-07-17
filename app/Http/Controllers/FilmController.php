@@ -3,99 +3,126 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Queries\FetchFilmsQuery;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Cache;
+use App\Queries\GetFilmsQuery;
 use App\Http\Requests\FilterFilmRequest;
-use App\Http\Responses\PaginatedSuccessResponse;
 use App\Http\Responses\SuccessResponse;
 use App\Http\Requests\StoreFilmRequest;
 use App\Models\Film;
 use App\Http\Resources\FilmResource;
-use App\Queries\FetchFilmQuery;
+use App\Http\Resources\FilmPreviewResource;
+use App\Queries\GetFilmQuery;
 use App\Jobs\ProcessFilm;
+use App\Http\Requests\UpdateFilmRequest;
+use App\Queries\GetSimilarFilmsQuery;
+use App\Actions\SetPromoAction;
 
+/**
+ * @psalm-api
+ */
 class FilmController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the films.
      */
-    public function index(FilterFilmRequest $request, FetchFilmsQuery $query): PaginatedSuccessResponse
+    public function index(FilterFilmRequest $request, GetFilmsQuery $query): SuccessResponse
     {
-        $data = $request->validated();
+        $validated = $request->validated();
 
-        $this->authorize('viewAny', [Film::class, $data['status']]);
+        Gate::authorize('viewAny', [Film::class, $validated['status'] ?? null]);
 
         $filters = [
-            ...$data,
+            ...$validated,
             'user_id' => $request->user()?->id,
         ];
 
-        $paginator = $query->execute($filters, perPage: 8);
+        $baseQuery = Film::query()->orderBy(
+            $filters['order_by'] ?? 'released',
+            $filters['order_to'] ?? 'desc'
+        );
 
-        return (new PaginatedSuccessResponse(
-            FilmResource::collection($paginator->items())->resolve(),
-            $paginator
-        ));
+        $data = $query->execute($filters, perPage: 8, baseQuery: $baseQuery);
+
+        return $this->successResponse(FilmPreviewResource::collection($data));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created film in storage.
      */
-    public function store(StoreFilmRequest $request)
+    public function store(StoreFilmRequest $request): SuccessResponse
     {
         $data = $request->validated();
 
-        $film = Film::create([
+        $film = Film::query()->create([
             'imdb_id' => $data['imdb_id'],
             'name' => 'Загрузка...',
             'status' => 'pending',
         ]);
 
-        ProcessFilm::dispatch($data['imdb_id']);
+        ProcessFilm::dispatch((string) $data['imdb_id']);
 
-        return new SuccessResponse($film, 201);
+        return $this->successResponse($film, 201);
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified film.
      */
-    public function show(string $id, FetchFilmQuery $query): SuccessResponse
+    public function show(string $id, GetFilmQuery $query): SuccessResponse
     {
-        $userId = auth('sanctum')->id();
+        $userId = (int) auth()->id();
 
-        $film = $query->execute($id, $userId);
+        $film = $query->execute((int) $id, $userId);
 
-        return new SuccessResponse(new FilmResource($film));
+        return $this->successResponse(FilmResource::make($film));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified film in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateFilmRequest $request, Film $film): SuccessResponse
     {
-        //
+        $film->update($request->validated());
+
+        return $this->successResponse(FilmResource::make($film));
     }
 
     /**
-     * Display a listing of similar films
+     * Display a listing of similar films.
      */
-    public function similar()
+    public function similar(Film $film, GetSimilarFilmsQuery $query): SuccessResponse
     {
-        return new SuccessResponse();
+        $userId = (int) auth()->id() ?: null;
+
+        $films = $query->execute($film, $userId);
+
+        return $this->successResponse(FilmPreviewResource::collection($films));
     }
 
     /**
-     * Display the promo film
+     * Display the promo film.
      */
-    public function showPromo()
+    public function showPromo(GetFilmQuery $query): SuccessResponse
     {
-        return new SuccessResponse();
+        $id = Cache::rememberForever(
+            'promo_film_id',
+            static fn() => Film::query()->where('is_promo', true)->first()?->id
+        );
+
+        $userId = (int) auth()->id() ?: null;
+
+        $promoFilm = $query->execute((int) $id, $userId);
+
+        return $this->successResponse(FilmResource::make($promoFilm));
     }
 
     /**
-     * Set the specified film as promo
+     * Set the specified film as a promo.
      */
-    public function setPromo(string $id)
+    public function setPromo(Film $film, SetPromoAction $action): SuccessResponse
     {
-        return new SuccessResponse();
+        $film = $action->execute($film)->refresh();
+
+        return $this->successResponse(FilmResource::make($film));
     }
 }

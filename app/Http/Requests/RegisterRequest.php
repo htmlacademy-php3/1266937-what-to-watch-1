@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\User;
 
-class RegisterRequest extends FormRequest
+final class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -45,7 +45,6 @@ class RegisterRequest extends FormRequest
             ],
             'file' => [
                 'nullable',
-                'file',
                 'image',
                 'max:10240',
             ],

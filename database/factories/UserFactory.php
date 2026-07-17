@@ -28,7 +28,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'role_id' => Role::firstOrCreate(['name' => RoleName::User->value])->id,
+            'role_id' => static fn() => Role::query()->firstOrCreate(['name' => RoleName::User->value])->id,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),

@@ -2,20 +2,26 @@
 
 namespace App\Services;
 
-class OmdbConverterService
+final class OmdbConverterService
 {
-    public function __construct()
-    {
-
-    }
-
     /**
      * Convert data from OMDb API into the DB format.
      *
-     * @param array $omdbData
+     * @param array<string, mixed> $omdbData
+     * @return array{
+     *     name: mixed,
+     *     poster_image: mixed,
+     *     description: mixed,
+     *     run_time: int|null,
+     *     released: int|null,
+     *     genres: array<int, string>,
+     *     actors: array<int, string>,
+     *     directors: array<int, string>
+     * }
      */
     public function convert(array $omdbData): array
     {
+        /** @var \Illuminate\Support\Collection<string, string|null> $data */
         $data = collect($omdbData)->map(fn($value) => ($value === 'N/A' || empty($value)) ? null : $value);
 
         return [
@@ -39,7 +45,7 @@ class OmdbConverterService
      */
     private function parseRuntime(?string $runtime): ?int
     {
-        if (empty($runtime)) {
+        if ($runtime === null || $runtime === '') {
             return null;
         }
 
@@ -57,7 +63,7 @@ class OmdbConverterService
      */
     private function parseYear(?string $date): ?int
     {
-        if (empty($date)) {
+        if ($date === null || $date === '') {
             return null;
         }
 
@@ -75,7 +81,7 @@ class OmdbConverterService
      */
     private function parseCsv(?string $csvString): array
     {
-        if (!$csvString) {
+        if ($csvString === null || $csvString === '') {
             return [];
         }
 
